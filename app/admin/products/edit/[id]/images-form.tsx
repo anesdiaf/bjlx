@@ -26,6 +26,8 @@ interface Values {
     [key: string]: any;
 }
 
+
+
 export default function ProductImagesForm({ id, productId }: { id: number, productId: number }) {
 
     const [images, setImages] = useState<Blob[]>([])
@@ -49,7 +51,15 @@ export default function ProductImagesForm({ id, productId }: { id: number, produ
             return
         }
 
-        const uuid = randomUUID()
+
+        let uuid = "";
+
+        if(process.env.NODE_ENV == "development"){
+            uuid = `${id}-${productId}`
+        } else if (process.env.NODE_ENV == "production") {
+            uuid = randomUUID()
+        }
+
 
         const location = `/products/${productId}/${id}/${uuid}.webp`
 

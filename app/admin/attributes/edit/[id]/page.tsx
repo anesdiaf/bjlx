@@ -39,7 +39,11 @@ export default async function EditAttributeAdminPage({
             await db.update(attribute).set({ title }).where(eq(attribute.id, currentAttribute.id))
             revalidatePath(`/admin/attributes/edit/${currentAttribute.id}`)
         } catch (err) {
-            console.log(err.message);
+            if (err instanceof Error) {
+                // TypeScript now knows 'error' is an Error object
+                console.log(err.message);
+            }
+
         }
 
     }
@@ -55,7 +59,10 @@ export default async function EditAttributeAdminPage({
 
             revalidatePath(`/admin/attributes/edit/${currentAttribute.id}`)
         } catch (err) {
-            console.log(err.message);
+            if (err instanceof Error) {
+                // TypeScript now knows 'error' is an Error object
+                console.log(err.message);
+            }
         }
     }
 
@@ -71,7 +78,10 @@ export default async function EditAttributeAdminPage({
 
             revalidatePath(`/admin/attributes/edit/${currentAttribute.id}`)
         } catch (err) {
-            console.log(err.message);
+            if (err instanceof Error) {
+                // TypeScript now knows 'error' is an Error object
+                console.log(err.message);
+            }
         }
     }
 

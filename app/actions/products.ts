@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/src";
-import { product, productVariant, productVariantValues, producVariantInsertType, producVariantType } from "@/src/db/schema";
+import { product, productInsertType, productVariant, productVariantValues, producVariantInsertType, producVariantType } from "@/src/db/schema";
 import { disk } from "@/src/fs";
 import { ActionResult } from "@/types";
 import { and, eq } from "drizzle-orm";
@@ -30,12 +30,15 @@ export const createProduct = async (formData: FormData): Promise<ActionResult> =
 
 
         // handle sql query
-        const query = await db.insert(product).values(productObject).returning({ productID: product.id })
+        const query = await db.insert(product).values(productObject as productInsertType).returning({ productID: product.id })
 
 
         return { success: true, data: query[0].productID }
     } catch (err) {
-        console.log(err.message);
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
         return { success: false, error: "Erreur lors de la création du produit" }
     }
 }
@@ -71,7 +74,10 @@ export const editProduct = async (formData: FormData, id: number): Promise<Actio
 
         return { success: true }
     } catch (err) {
-        console.log(err.message);
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
         return { success: false, error: "Erreur lors de la modification du produit" }
     }
 }
@@ -90,7 +96,10 @@ export const deleteProduct = async (id: number): Promise<ActionResult> => {
         return { success: true }
 
     } catch (err) {
-        console.log(err.message);
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
         return { success: false, error: "Erreur lors de la suppression de produit" }
     }
 }
@@ -142,13 +151,16 @@ export const createVariant = async (formData: FormData, productId: number): Prom
 
 
         // handle sql query
-        await db.insert(productVariant).values(variantObject)
+        await db.insert(productVariant).values(variantObject as producVariantInsertType)
 
         revalidatePath(`/admin/products/edit/${productId}`)
 
         return { success: true }
     } catch (err) {
-        console.log(err.message);
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
         return { success: false, error: "Erreur lors de la création de la variante" }
     }
 }
@@ -183,7 +195,10 @@ export const editVariant = async (formData: FormData, productId: number, variant
 
         return { success: true }
     } catch (err) {
-        console.log(err.message);
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
         return { success: false, error: "Erreur lors de la création de la variante" }
     }
 }
@@ -202,7 +217,10 @@ export const deleteVariant = async (id: number, productId: number): Promise<Acti
         return { success: true }
 
     } catch (err) {
-        console.log(err.message);
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
         return { success: false, error: "Erreur lors de la suppression de produit" }
     }
 }
@@ -232,7 +250,10 @@ export const setVariantValue = async (attribute_id: number, value_id: number, pr
 
         return { success: true }
     } catch (err) {
-        console.log(err.message);
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
         return { success: false, error: "Erreur lors de la création du produit" }
     }
 }
@@ -254,7 +275,10 @@ export const deleteVariantValue = async (attribute_id: number, variant_id: numbe
         return { success: true }
 
     } catch (err) {
-        console.log(err.message);
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
         return { success: false, error: "Erreur lors de la suppression de produit" }
     }
 }
@@ -270,14 +294,17 @@ export const createVariantImage = async (location: string, blob: Blob, variant_i
 
         const buffer = Buffer.from(await blob.arrayBuffer())
 
-        await disk.put(key,buffer)
+        await disk.put(key, buffer)
 
 
         // Should store key variant_id product_id and order, and check for order first
 
         return { success: true }
     } catch (err) {
-        console.log(err.message);
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
         return { success: false, error: "Erreur lors de la suppression de produit" }
     }
 }

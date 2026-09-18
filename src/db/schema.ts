@@ -81,6 +81,8 @@ export const category = pgTable("category", {
 ])
 
 export type categoryType = typeof category.$inferSelect;
+export type categoryInsertType = typeof category.$inferInsert;
+
 
 
 export const attribute = pgTable("attribute", {
@@ -140,6 +142,7 @@ export const product = pgTable("product", {
 ])
 
 export type productType = typeof product.$inferSelect;
+export type productInsertType = typeof product.$inferInsert;
 
 
 export const productVariant = pgTable("product_variant", {

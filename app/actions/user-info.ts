@@ -51,7 +51,10 @@ export async function updateUserInfo(formData: FormData): Promise<ActionResult> 
         
         return { success: true }
     } catch (err) {
-        console.error(err)
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
         return { success: false, error: "Échec de l'enregistrement des informations utilisateur" }
     }
 } 

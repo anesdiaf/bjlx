@@ -22,6 +22,10 @@ export default async function SettingsAdminPage() {
     const communes = await db.select({ count: count() }).from(commune)
 
 
+    if(!wilayas || !communes){
+        return <div>...</div>
+    }
+    
     return (
         <div>
             <h3 className="text-2xl mb-6">Paramètres</h3>

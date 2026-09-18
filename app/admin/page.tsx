@@ -13,7 +13,6 @@ export default function DashboardPage() {
         const response = await auth.api.signOut({
             headers: await headers()
         })
-        console.log("Hit");
         if (response.success) {
             redirect("/")
         }

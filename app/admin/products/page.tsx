@@ -13,6 +13,10 @@ export default async function ProductsAdminPage() {
 
     const products = await db.select().from(product)
 
+    if(!products){
+        return <div>...</div>
+    }
+
     return (
         <div className="w-full">
             <div className="flex justify-between">

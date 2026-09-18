@@ -22,6 +22,10 @@ export default async function CategoriesAdminPage() {
 
     const categories = await db.select().from(category).orderBy(asc(category.order))
 
+    if(!categories){
+        return <div>...</div>
+    }
+
     return (
         <div className="w-full">
             <div className="flex justify-between">

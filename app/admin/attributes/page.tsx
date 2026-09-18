@@ -13,14 +13,16 @@ import {
 } from "@/components/ui/table"
 import Link from "next/link";
 import { db } from "@/src";
-import { attribute, category } from "@/src/db/schema";
-import { Badge } from "@/components/ui/badge";
-import DeleteCategoryButton from "@/components/admin/categories/delete-category-button";
+import { attribute } from "@/src/db/schema";
 import DeleteAttributeButton from "@/components/admin/attributes/delete-attribute-button";
 
 export default async function AttributesAdminPage(){
 
     const attributes = await db.select().from(attribute)
+
+    if(!attributes){
+        return <div>...</div>
+    }
 
     return(
         <div className="w-full">

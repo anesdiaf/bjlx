@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Separator } from "@/components/ui/separator"
 import { toast } from "@/components/ui/toast"
 import { attributeWithValuesType, productVariantValuesType } from "@/src/db/schema"
+import { randomUUID } from "crypto"
 import { CameraIcon, CheckIcon, ImageIcon, ImagePlusIcon, PlusIcon, UploadIcon, XIcon } from "lucide-react"
 import Image from "next/image"
 import { SubmitEvent, useEffect, useState } from "react"
@@ -36,31 +37,35 @@ export default function ProductImagesForm({ id, productId }: { id: number, produ
 
 
     const uploadImage = async (e: SubmitEvent<HTMLFormElement>) => {
-
-        if(!imageBlob){
-            return
-        }
+        
+        
         e.preventDefault()
 
         const formData = new FormData(e.target)
 
-        const order = formData.get("order")
+        const order = formData.get("order") as string
 
-        const location = `/products/${productId}/${id}/${order}.webp`
+        if (!imageBlob || order === undefined || order == "") {
+            return
+        }
 
-        const response = await createVariantImage(location, imageBlob, id, productId )
-        
+        const uuid = randomUUID()
+
+        const location = `/products/${productId}/${id}/${uuid}.webp`
+
+        const response = await createVariantImage(location, imageBlob, id, productId)
+
 
 
         if (response.success) {
-        
+
             toast.add({
                 title: "Image téléchargée avec succès",
                 type: "success"
             })
-        
+
             setOpen(false)
-        
+
         } else {
             toast.add({
                 title: response.error,

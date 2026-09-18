@@ -52,16 +52,10 @@ export default function ProductImagesForm({ id, productId }: { id: number, produ
         }
 
 
-        let uuid = "";
-
-        if(process.env.NODE_ENV == "development"){
-            uuid = `${id}-${productId}`
-        } else if (process.env.NODE_ENV == "production") {
-            uuid = randomUUID()
-        }
+        const timestamp = new Date().getTime()
 
 
-        const location = `/products/${productId}/${id}/${uuid}.webp`
+        const location = `/products/${productId}/${id}/${timestamp}.webp`
 
         const response = await createVariantImage(location, imageBlob, id, productId)
 
@@ -75,7 +69,7 @@ export default function ProductImagesForm({ id, productId }: { id: number, produ
             })
 
             setOpen(false)
-
+            setImageBlob(undefined)
         } else {
             toast.add({
                 title: response.error,

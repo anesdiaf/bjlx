@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { AppSidebar } from "@/components/admin/all/app-sidebar"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { auth } from "@/lib/auth"

@@ -5,6 +5,7 @@ import pg from "pg"
 
 export const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL!,
+  idleTimeoutMillis: 10000,
   max: 10, // Adjust based on your server limits
 });
 

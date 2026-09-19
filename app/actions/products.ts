@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/src";
-import { product, productInsertType, productVariant, productVariantValues, producVariantInsertType, producVariantType } from "@/src/db/schema";
+import { product, productInsertType, productVariant, productVariantValues, producVariantInsertType, producVariantType, variantImage, variantThumbnail } from "@/src/db/schema";
 import { disk } from "@/src/fs";
 import { ActionResult } from "@/types";
 import { and, eq } from "drizzle-orm";
@@ -199,7 +199,7 @@ export const editVariant = async (formData: FormData, productId: number, variant
             // TypeScript now knows 'error' is an Error object
             console.log(err.message);
         }
-        return { success: false, error: "Erreur lors de la création de la variante" }
+        return { success: false, error: "Erreur lors de la modification de la variante" }
     }
 }
 
@@ -221,7 +221,7 @@ export const deleteVariant = async (id: number, productId: number): Promise<Acti
             // TypeScript now knows 'error' is an Error object
             console.log(err.message);
         }
-        return { success: false, error: "Erreur lors de la suppression de produit" }
+        return { success: false, error: "Erreur lors de la suppression de la variante" }
     }
 }
 
@@ -254,7 +254,7 @@ export const setVariantValue = async (attribute_id: number, value_id: number, pr
             // TypeScript now knows 'error' is an Error object
             console.log(err.message);
         }
-        return { success: false, error: "Erreur lors de la création du produit" }
+        return { success: false, error: "Erreur lors de la définition de la valeur de l'attribut de variante" }
     }
 }
 
@@ -279,7 +279,7 @@ export const deleteVariantValue = async (attribute_id: number, variant_id: numbe
             // TypeScript now knows 'error' is an Error object
             console.log(err.message);
         }
-        return { success: false, error: "Erreur lors de la suppression de produit" }
+        return { success: false, error: "Erreur lors de la suppression de la valeur d'attribut de variante" }
     }
 }
 
@@ -287,17 +287,26 @@ export const deleteVariantValue = async (attribute_id: number, variant_id: numbe
 
 // Images
 
-export const createVariantImage = async (location: string, blob: Blob, variant_id: number, product_id: number): Promise<ActionResult> => {
+export const createVariantImage = async (location: string, order: number, blob: Blob, variant_id: number, product_id: number): Promise<ActionResult> => {
     try {
 
         const key = location;
 
         const buffer = Buffer.from(await blob.arrayBuffer())
 
+        // Creating file in FS
         await disk.put(key, buffer)
 
+        // Store Image Data in DB
+        await db.insert(variantImage).values({
+            url: key,
+            order,
+            variant_id,
+            product_id
+        })
 
-        // Should store key variant_id product_id and order, and check for order first
+        // revalidate path
+        revalidatePath(`/admin/products/edit/${product_id}`)
 
         return { success: true }
     } catch (err) {
@@ -305,6 +314,131 @@ export const createVariantImage = async (location: string, blob: Blob, variant_i
             // TypeScript now knows 'error' is an Error object
             console.log(err.message);
         }
-        return { success: false, error: "Erreur lors de la suppression de produit" }
+        return { success: false, error: "Erreur lors de la définition de l'image de la variante" }
+    }
+}
+
+export const editVariantImage = async (id: number, order: number,product_id: number): Promise<ActionResult> => {
+    try {
+
+        // Delelte data from DB
+        await db.update(variantImage).set({
+            order
+        }).where(eq(variantImage.id, id))
+
+
+        // revalidate path
+        revalidatePath(`/admin/products/edit/${product_id}`)
+
+        return { success: true }
+    } catch (err) {
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
+        return { success: false, error: "Erreur lors de la modification de l'image de la variante" }
+    }
+}
+
+export const deleteVariantImage = async (id: number, key: string, product_id: number): Promise<ActionResult> => {
+    try {
+
+
+        // Delete the file
+        await disk.delete(key)
+
+        // Delelte data from DB
+        await db.delete(variantImage).where(eq(variantImage.id, id))
+
+
+        // revalidate path
+        revalidatePath(`/admin/products/edit/${product_id}`)
+
+        return { success: true }
+    } catch (err) {
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
+        return { success: false, error: "Erreur lors de la suppression de l'image de la variante" }
+    }
+}
+
+// Thumbnails
+
+export const createVariantThumbnail = async (location: string, order: number, blob: Blob, variant_id: number, product_id: number): Promise<ActionResult> => {
+    try {
+
+        const key = location;
+
+        const buffer = Buffer.from(await blob.arrayBuffer())
+
+        // Creating file in FS
+        await disk.put(key, buffer)
+
+        // Store Image Data in DB
+        await db.insert(variantThumbnail).values({
+            url: key,
+            order,
+            variant_id,
+            product_id
+        })
+
+        // revalidate path
+        revalidatePath(`/admin/products/edit/${product_id}`)
+
+        return { success: true }
+    } catch (err) {
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
+        return { success: false, error: "Erreur lors de la définition de la vignette de la variante" }
+    }
+}
+
+export const editVariantThumbnail = async (id: number, order: number,product_id: number): Promise<ActionResult> => {
+    try {
+
+        // Delelte data from DB
+        await db.update(variantThumbnail).set({
+            order
+        }).where(eq(variantThumbnail.id, id))
+
+
+        // revalidate path
+        revalidatePath(`/admin/products/edit/${product_id}`)
+
+        return { success: true }
+    } catch (err) {
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
+        return { success: false, error: "Erreur lors de la modification de la vignette de la variante" }
+    }
+}
+
+export const deleteVariantThumbnail = async (id: number, key: string, product_id: number): Promise<ActionResult> => {
+    try {
+
+
+        // Delete the file
+        await disk.delete(key)
+
+        // Delelte data from DB
+        await db.delete(variantThumbnail).where(eq(variantThumbnail.id, id))
+
+
+        // revalidate path
+        revalidatePath(`/admin/products/edit/${product_id}`)
+
+        return { success: true }
+    } catch (err) {
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
+        return { success: false, error: "Erreur lors de la suppression de l'image de la variante" }
     }
 }

@@ -165,7 +165,7 @@ export const productVariant = pgTable("product_variant", {
 export type producVariantType = typeof productVariant.$inferSelect;
 export type producVariantInsertType = typeof productVariant.$inferInsert;
 
-export const variantImages = pgTable("variant_images", {
+export const variantImage = pgTable("variant_image", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     product_id: integer().references(() => product.id, { onDelete: "cascade" }),
     variant_id: integer().references(() => productVariant.id, { onDelete: "cascade" }),
@@ -176,7 +176,10 @@ export const variantImages = pgTable("variant_images", {
     index("variant_image_id_idx").on(table.variant_id)
 ])
 
-export const variantThumbnails = pgTable("variant_thumbnails", {
+
+export type variantImageType = typeof variantImage.$inferSelect;
+
+export const variantThumbnail = pgTable("variant_thumbnail", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     product_id: integer().references(() => product.id, { onDelete: "cascade" }),
     variant_id: integer().references(() => productVariant.id, { onDelete: "cascade" }),
@@ -186,6 +189,8 @@ export const variantThumbnails = pgTable("variant_thumbnails", {
     index("product_thumbnail_id_idx").on(table.product_id),
     index("variant_thumbnail_id_idx").on(table.variant_id)
 ])
+
+export type variantThumbnailType = typeof variantThumbnail.$inferSelect;
 
 // After creating the product base when creating a variant i show attributes, when an attribute value (i.e: Red, XL, Special Box....) the variant is linked directly to attribute because the value is linked to that attribute -> See attributeValues table
 export const productVariantValues = pgTable("product_variant_values", {

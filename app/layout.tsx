@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Noto_Serif, Public_Sans, JetBrains_Mono, Merriweather } from "next/font/google";
+import { Geist, Geist_Mono, Noto_Serif, Public_Sans, JetBrains_Mono, Noto_Serif_Display, Roboto, IBM_Plex_Sans, Roboto_Slab } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
+const ibmPlexSans = IBM_Plex_Sans({subsets:['latin'],variable:'--font-sans'});
+
 const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
 
-const merriweatherHeading = Merriweather({subsets:['latin'],variable:'--font-heading'});
+const robotoSlabHeading = Roboto_Slab({subsets:['latin'],variable:'--font-heading'});
 
 const notoSerif = Noto_Serif({subsets:['latin'],variable:'--font-serif'});
 
@@ -30,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, notoSerif.variable, "font-mono", jetbrainsMono.variable, merriweatherHeading.variable)}
+      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, ibmPlexSans.variable, notoSerif.variable, "font-mono", jetbrainsMono.variable, robotoSlabHeading.variable)}
     >
       <body className="min-h-full flex flex-col">
         <TooltipProvider>{children}</TooltipProvider>

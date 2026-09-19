@@ -7,7 +7,9 @@
 7. Required page (privacy, contact...)
 
 
-Stopped at Variant images (add edit delete, maybe add a way to controll which images appear as thumbnails)
+Stopped at product page handle promo case stock tracking  (if it's tracked check stock and show rupture else always show available) then move to thumbnails and product card
+
+Variant images (add edit delete, add a way to controll which images appear as thumbnails)
 
 The ideal image aspect should be a an aspect of a square 1:1
 The form should be image (blob), url (input), path/uuid (i should receive this after uploading the image), and order (no 1 should be the main image) and a thumbnail or two for dynamic product thumbnail
@@ -19,3 +21,7 @@ Should visit atomic website to get an idea about checkout and quick orders becau
 Actual Todos (These deferred because i need to prioritize things over others):
 
 1. Add category image on category edit page 
+
+2. Choose better fonts
+
+3. Buy now dialog should check if user is logged in

@@ -3,7 +3,7 @@ import { db } from "@/src"
 import { CheckIcon, ChevronLeft, ImageIcon, Pen, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import EditProductForm from "./product-form";
-import { attribute, attributeValues, attributeValuesType, attributeWithValuesType, category, productVariant, productVariantValues } from "@/src/db/schema";
+import { attribute, attributeValues, attributeValuesType, attributeWithValuesType, category, productVariant, productVariantValues, variantImage, variantThumbnail } from "@/src/db/schema";
 import { eq, sql } from "drizzle-orm";
 import CreateVariantForm from "./variant-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,14 +40,16 @@ export default async function EditProductAdminPage({
         }
     })
 
-
+    // Product Variants
     const variants = await db.select().from(productVariant).where(eq(productVariant.product_id, id))
-
-
-    // I get productVariantValues to check if product variant's attributes
-
+    // productVariantValues (to check if product has attributes)
     const variantValues = await db.select().from(productVariantValues).where(eq(productVariantValues.product_id, id))
 
+
+    // Product Images
+    const prodcutImages = await db.select().from(variantImage).where(eq(variantImage.product_id, id));
+    // Prodcut Thumbnails
+    const prodcutThumbnails = await db.select().from(variantThumbnail).where(eq(variantThumbnail.product_id, id));
 
     return (
         <div className="w-full space-y-10">
@@ -101,7 +103,7 @@ export default async function EditProductAdminPage({
                                             <TableCell>{v.status ? <Badge className="bg-green-400/20 text-green-700">Active</Badge> : <Badge variant="destructive">Inactive</Badge>}</TableCell>
                                             <TableCell className="text-right space-x-2 flex justify-center items-center">
                                                 <SetAttributesForm variantValues={variantValues} attributes={attributes} id={v.id} productId={id} />
-                                                <ProductImagesForm id={v.id} productId={id}/>
+                                                <ProductImagesForm id={v.id} productId={id} prodcutImages={prodcutImages} productThumbnails={prodcutThumbnails}/>
                                                 <EditVariantForm id={v.id}/>
                                                 <DeleteVariantButton id={v.id} productId={id} />
                                             </TableCell>

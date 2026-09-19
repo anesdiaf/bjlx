@@ -6,12 +6,10 @@ import {
     SidebarGroupContent,
     SidebarGroupLabel,
     SidebarHeader,
-    SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { auth } from "@/lib/auth"
-import { AdIcon, Bolt, Box, GalleryHorizontal, Home, LinkIcon, LogOutIcon, LucideHash, SquareDashed, TagIcon, UserCheck2, UserIcon } from "lucide-react"
+import { AdIcon, Bolt, Box, DiamondIcon, GalleryHorizontal, Home, LinkIcon, LogOutIcon, LucideHash, SquareDashed, TagIcon, UserCheck2, UserIcon } from "lucide-react"
 import { headers } from "next/headers"
 import Link from "next/link"
 import { redirect } from "next/navigation"
@@ -32,7 +30,7 @@ export function AppSidebar() {
         <Sidebar collapsible="icon">
             <SidebarHeader>
                 <SidebarMenuButton className="flex justify-center" render={<a href="/admin" />}>
-                    <p className="text-2xl font-serif">BJLX</p>
+                    <span className="text-2xl font-serif">BJLX</span>
                 </SidebarMenuButton>
             </SidebarHeader>
             <SidebarContent>

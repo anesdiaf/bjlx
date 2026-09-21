@@ -77,7 +77,6 @@ export default function SetAttributesForm({ variantValues, attributes, id, produ
             variantValues.forEach(element => {
                 setValues({ ...values, [element.attribute_id!]: element.value_id })
             });
-
         }
     }, [])
 
@@ -87,7 +86,7 @@ export default function SetAttributesForm({ variantValues, attributes, id, produ
             <DialogContent showCloseButton={false}>
                 <DialogHeader>
                     <DialogTitle className="w-full flex justify-between items-center">
-                        Définir les attributs
+                        Définir les attributs {id}
                         <Button onClick={() => setOpen(false)} type="button" variant="ghost" size="icon-sm"><XIcon /></Button>
                     </DialogTitle>
                 </DialogHeader>

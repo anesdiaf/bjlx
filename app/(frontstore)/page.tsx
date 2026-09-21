@@ -6,14 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatNumbers } from "@/lib/utils";
-import { db } from "@/src";
 import { Handbag, HeartIcon } from "lucide-react";
 import Link from "next/link";
 import { getFeaturedProducts } from "../actions/products";
 
 export default async function Home() {
 
-  const {data: featuredProducts} = await getFeaturedProducts()
+  const { data: featuredProducts } = await getFeaturedProducts()
 
 
   return (
@@ -42,7 +41,8 @@ export default async function Home() {
                         <p className="text-muted-foreground text-sm line-through">{formatNumbers(price, "DZ-dz")} D.A</p>
                       </div>
                       :
-                      <p className="font-medium ">{formatNumbers(price, "DZ-dz")} D.A</p>}
+                      <p className="font-medium ">{formatNumbers(price, "DZ-dz")} D.A</p>
+                    }
                     <Handbag size={18} className="" />
                   </div>
 

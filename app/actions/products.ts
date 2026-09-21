@@ -4,8 +4,9 @@ import { db } from "@/src";
 import { product, productInsertType, productVariant, productVariantValues, producVariantInsertType, producVariantType, variantImage, variantThumbnail } from "@/src/db/schema";
 import { disk } from "@/src/fs";
 import { ActionResult } from "@/types";
-import { and, eq } from "drizzle-orm";
+import { and, eq, SQL, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 
 
@@ -44,6 +45,106 @@ export const createProduct = async (formData: FormData): Promise<ActionResult> =
 }
 
 
+
+export const getProduct = async (id: number) => {
+    try {
+        const productDetails = await db.query.product.findFirst({
+            where: {
+                id
+            }
+        })
+
+        return { success: true, data: productDetails }
+    } catch (err) {
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
+        return { success: false, error: "Erreur lors du chargement des données produit" }
+    }
+
+}
+
+interface Value extends Object {
+    [key: number]: any;
+}
+
+export const getProductVariant = async (product_id: number, values: Value) => {
+
+    let isSuccess = false;
+    let id: number;
+    try {
+
+        const sqlChunks: SQL[] = [];
+        sqlChunks.push(sql`select variant_id from product_variant_values`);
+        sqlChunks.push(sql`where`);
+
+        console.log();
+
+        Object.keys(values).forEach(k => {
+            sqlChunks.push(sql`attribute_id = ${k}`)
+            sqlChunks.push(sql`and value_id = ${values[Number(k)]}`)
+        })
+
+        const finalSql: SQL = sql.join(sqlChunks, sql.raw(' '));
+
+        const response = await db.execute(finalSql)
+
+        console.log(response.rows);
+
+        id = response.rows[0].variant_id as number;
+
+        isSuccess = true
+        //return { success: true, data: id }
+    } catch (err) {
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
+        return { success: false, error: "Erreur lors du chargement des données produit" }
+    }
+
+
+    if (isSuccess) {
+        redirect(`/products/${product_id}?variant=${id!}`)
+    } else {
+        redirect(`/products/${product_id}`)
+    }
+}
+
+export const getProductDetailed = async (id: number) => {
+
+    try {
+        const detailedProduct = await db.query.product.findFirst({
+            where: {
+                id,
+                variants: true
+            },
+            with: {
+                variants: {
+                    with: {
+                        images: true,
+                        values: {
+                            with: {
+                                attribute: true,
+                                value: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        return { success: true, data: detailedProduct }
+    } catch (err) {
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
+        return { success: false, error: "Erreur lors du chargement des données produit" }
+    }
+}
+
 export const getFeaturedProducts = async () => {
     try {
         const featuredProducts = await db.query.product.findMany({
@@ -68,7 +169,7 @@ export const getFeaturedProducts = async () => {
             // TypeScript now knows 'error' is an Error object
             console.log(err.message);
         }
-        return { success: false, error: "Erreur lors de la création du produit" }
+        return { success: false, error: "Erreur lors du chargement des produits en vedette" }
     }
 }
 

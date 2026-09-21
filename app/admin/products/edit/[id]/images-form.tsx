@@ -34,8 +34,6 @@ export default function ProductImagesForm(
 ) {
 
 
-
-
     const [open, setOpen] = useState(false);
 
 
@@ -49,16 +47,16 @@ export default function ProductImagesForm(
 
         if (!imageBlob || !imageOrder) {
             toast.add({
-                title: "L'image et son ordre sont requis",
+                title: "Une image et son ordre sont requis",
                 type: "error",
             })
             return
         }
 
 
-        if (prodcutImages.find(i => i.order === imageOrder)) {
+        if (prodcutImages.filter(i => i.variant_id === id).find(i => i.order === imageOrder)) {
             toast.add({
-                title: "L'image avec cette commande existe déjà",
+                title: "Une image avec cette order existe déjà",
                 type: "error",
             })
             return
@@ -148,16 +146,16 @@ export default function ProductImagesForm(
 
         if (!thumbnailBlob || !thumbnailOrder) {
             toast.add({
-                title: "L'image et son ordre sont requis",
+                title: "Une vignette et son ordre sont requis",
                 type: "error",
             })
             return
         }
 
 
-        if (productThumbnails.find(i => i.order === thumbnailOrder)) {
+        if (productThumbnails.filter(i => i.variant_id === id).find(i => i.order === thumbnailOrder)) {
             toast.add({
-                title: "La vignette avec cette commande existe déjà",
+                title: "Une vignette avec cette order existe déjà",
                 type: "error",
             })
             return

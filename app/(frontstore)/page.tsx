@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatNumbers } from "@/lib/utils";
-import { Handbag, HeartIcon } from "lucide-react";
+import { Handbag, HeartIcon, Sparkle, Truck, UserRoundCheck } from "lucide-react";
 import Link from "next/link";
 import { getFeaturedProducts } from "../actions/products";
 
@@ -52,25 +52,36 @@ export default async function Home() {
           })}
         </div>
       </div>
+
+      <div className="flex justify-evenly w-full bg-accent py-6 px-4 md:px-4">
+        <div className="w-full text-center space-y-4">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+            <Sparkle className="text-primary" />
+            <h2 className="text-lg md:text-xl font-medium">Qualité Exceptionnelle</h2>
+          </div>
+          <p className="text-sm lg:text-base text-muted-foreground">Des bijoux élégants, soigneusement sélectionnés pour durer.</p>
+        </div>
+        <Separator className="mx-2" orientation="vertical" />
+        <div className="w-full text-center space-y-4">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+            <Truck className="text-primary" />
+            <h2 className="text-lg md:text-xl font-medium">Livraison fiable</h2>
+          </div>
+          <p className="text-sm lg:text-base text-muted-foreground">Livraison rapide et sécurisée dans les 69 wilayas d’Algérie.</p>
+        </div>
+        <Separator className="mx-2" orientation="vertical" />
+        <div className="w-full text-center space-y-4">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+            <UserRoundCheck className="text-primary" />
+            <h2 className="text-lg md:text-xl font-medium">Le Client D&apos;abord</h2>
+          </div>
+
+          <p className="text-sm lg:text-base text-muted-foreground">Nous sommes toujours là pour rendre votre expérience exceptionnelle.</p>
+        </div>
+      </div>
       <div className="space-y-4">
         <h2 className="text-3xl font-serif">Contes de fées du quotidien</h2>
-        <p className="text-center text-muted-foreground">Suivez-nous sur Instagram <a href="https://">@bjluxe</a></p>
-      </div>
-      <div className="flex justify-evenly w-full">
-        <div className="w-full text-center">
-          <h2 className="text-xl">Livraison fiable</h2>
-          <p className="text-muted-foreground">Lorem ipsum</p>
-        </div>
-        <Separator orientation="vertical" />
-        <div className="w-full text-center">
-          <h2 className="text-xl">Livraison fiable</h2>
-          <p className="text-muted-foreground">Lorem ipsum</p>
-        </div>
-        <Separator orientation="vertical" />
-        <div className="w-full text-center">
-          <h2 className="text-xl">Livraison fiable</h2>
-          <p className="text-muted-foreground">Lorem ipsum</p>
-        </div>
+        <p className="text-center text-muted-foreground">Suivez-nous sur Instagram <a href="https://www.instagram.com/bjlx_dz">@bjlx_dz</a></p>
       </div>
     </div>
   );

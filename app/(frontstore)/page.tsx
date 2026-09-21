@@ -1,3 +1,5 @@
+export const revalidate = 60;
+
 import HomePageCarousel from "@/components/frontstore/homepage/carousel";
 import ProductCardThumbnails from "@/components/frontstore/product/product-card-thumbnails";
 import { Badge } from "@/components/ui/badge";
@@ -5,24 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatNumbers } from "@/lib/utils";
 import { db } from "@/src";
-import { Handbag, HeartIcon, ShoppingBag, ShoppingBasket } from "lucide-react";
-import Image from "next/image";
+import { Handbag, HeartIcon } from "lucide-react";
 import Link from "next/link";
-
-interface productCardType {
-  id: number;
-  title: string;
-  desc: string | null;
-  status: boolean | null;
-  meta_url_key: string;
-  meta_title: string;
-  meta_desc: string;
-  createdAt: Date | null;
-  updatedAt: Date | null;
-  category_id: number | null;
-  collection_id: number | null;
-  featured: boolean | null;
-}
 
 export default async function Home() {
 

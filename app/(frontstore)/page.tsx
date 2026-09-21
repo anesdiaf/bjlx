@@ -9,24 +9,12 @@ import { formatNumbers } from "@/lib/utils";
 import { db } from "@/src";
 import { Handbag, HeartIcon } from "lucide-react";
 import Link from "next/link";
+import { getFeaturedProducts } from "../actions/products";
 
 export default async function Home() {
 
-  const featuredProducts = await db.query.product.findMany({
-    where: {
-      featured: true,
-    },
-    with: {
-      variants: {
-        where: {
-          default: true
-        },
-        with: {
-          thumbnails: true
-        }
-      }
-    }
-  })
+  const {data: featuredProducts} = await getFeaturedProducts()
+
 
   return (
     <div className="flex flex-col flex-1 items-center font-sans gap-y-12">
@@ -34,7 +22,7 @@ export default async function Home() {
       <div className="w-full space-y-6">
         <h1 className="text-center text-3xl font-serif">L&apos;Art de Briller</h1>
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 items-center relative">
-          {featuredProducts.map(p => {
+          {featuredProducts && featuredProducts.map(p => {
             const { title } = p;
             const { price, promo_price, on_promo, thumbnails } = p.variants[0];
             return (

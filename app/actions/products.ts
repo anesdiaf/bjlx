@@ -44,6 +44,35 @@ export const createProduct = async (formData: FormData): Promise<ActionResult> =
 }
 
 
+export const getFeaturedProducts = async () => {
+    try {
+        const featuredProducts = await db.query.product.findMany({
+            where: {
+                featured: true,
+            },
+            with: {
+                variants: {
+                    where: {
+                        default: true
+                    },
+                    with: {
+                        thumbnails: true
+                    }
+                }
+            }
+        })
+
+        return { success: true, data: featuredProducts }
+    } catch (err) {
+        if (err instanceof Error) {
+            // TypeScript now knows 'error' is an Error object
+            console.log(err.message);
+        }
+        return { success: false, error: "Erreur lors de la création du produit" }
+    }
+}
+
+
 
 export const editProduct = async (formData: FormData, id: number): Promise<ActionResult> => {
 
@@ -318,7 +347,7 @@ export const createVariantImage = async (location: string, order: number, blob: 
     }
 }
 
-export const editVariantImage = async (id: number, order: number,product_id: number): Promise<ActionResult> => {
+export const editVariantImage = async (id: number, order: number, product_id: number): Promise<ActionResult> => {
     try {
 
         // Delelte data from DB
@@ -397,7 +426,7 @@ export const createVariantThumbnail = async (location: string, order: number, bl
     }
 }
 
-export const editVariantThumbnail = async (id: number, order: number,product_id: number): Promise<ActionResult> => {
+export const editVariantThumbnail = async (id: number, order: number, product_id: number): Promise<ActionResult> => {
     try {
 
         // Delelte data from DB

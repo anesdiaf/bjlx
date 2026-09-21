@@ -15,8 +15,8 @@ export default function HomePageCarousel() {
             <CarouselContent>
                 {images.map((_, index) => (
                     <CarouselItem key={index}>
-                        <div className="w-full h-full overflow-hidden rounded aspect-video">
-                            <Image src={_} width={1600} height={900} alt={_} className="w-full h-full object-cover"/>
+                        <div className="w-full h-full overflow-hidden aspect-video">
+                            <Image loading={index === 0 ? "eager" : "lazy"} src={_} width={1600} height={900} alt={_} className="w-full h-full object-cover"/>
                         </div>
                     </CarouselItem>
                 ))}

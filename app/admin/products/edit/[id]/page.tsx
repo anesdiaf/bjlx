@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { db } from "@/src"
-import { CheckIcon, ChevronLeft, ImageIcon, Pen, PlusIcon } from "lucide-react";
+import { CheckIcon, ChevronLeft, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import EditProductForm from "./product-form";
-import { attribute, attributeValues, attributeValuesType, attributeWithValuesType, category, productVariant, productVariantValues, variantImage, variantThumbnail } from "@/src/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { category, productVariant, productVariantValues, variantImage, variantThumbnail } from "@/src/db/schema";
+import { eq} from "drizzle-orm";
 import CreateVariantForm from "./variant-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";

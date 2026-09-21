@@ -2,8 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/src";
-import { attributeType, category, productVariant, productVariantValues, productVariantValuesType, producVariantType, variantImage, variantThumbnail } from "@/src/db/schema";
+import { attributeType, productVariant, productVariantValues, productVariantValuesType, producVariantType, variantImage } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
+import { CheckCircle, XCircle } from "lucide-react";
 import { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 
@@ -33,8 +34,6 @@ export async function generateMetadata(
         description: currentProduct ? currentProduct.meta_desc : "",
     }
 }
-
-
 
 
 
@@ -100,10 +99,10 @@ export default async function SingleProductPage({
             <div className="gap-6 flex flex-col md:flex-row md:items-end">
                 <Carousel className="w-full md:w-110 2xl:w-1/2">
                     <CarouselContent>
-                        {prodcutImages.filter(i => i.variant_id === currentVariant!.id).map((i) => (
+                        {prodcutImages.filter(i => i.variant_id === currentVariant!.id).map((i, index) => (
                             <CarouselItem key={i.id}>
                                 <div className="w-full h-full overflow-hidden rounded aspect-square">
-                                    <Image src={`/api/uploads${i.url}`} width={600} height={600} alt={`Image ${i.id}`} className="w-full h-full object-cover" />
+                                    <Image loading={index == 0 ? "eager" : "lazy"} src={`/api/uploads${i.url}`} width={600} height={600} alt={`Image ${i.id}`} className="w-full h-full object-cover" />
                                 </div>
                             </CarouselItem>
                         ))}
@@ -124,6 +123,22 @@ export default async function SingleProductPage({
                             <p className="text-muted-foreground w-1/2 text-center">Réf. : {currentVariant.sku}</p>
                         </div>
                     </div>
+                    {currentVariant.track_stock ?
+                        currentVariant.stock! > 0 ?
+                            <div className="flex items-center gap-2 text-xs text-green-600">
+                                <CheckCircle/>
+                                <p>En stock - délai de livraison 2-5 jours ouvrables</p>
+                            </div>
+                            :
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <XCircle/>
+                                <p>Rupture de stock — Contactez-nous pour plus d’informations</p>
+                            </div>
+                        :
+                        <div className="flex items-center gap-2 text-sm text-green-600">
+                            <p>En stock - délai de livraison 2-5 jours ouvrables</p>
+                        </div>
+                    }
                     <div className="space-y-4">
                         <Button className="w-full">Ajouter au panier</Button>
                         <Button className="w-full">Acheter maintenant</Button>

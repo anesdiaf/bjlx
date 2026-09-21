@@ -4,7 +4,6 @@ import HomePageCarousel from "@/components/frontstore/homepage/carousel";
 import ProductCardThumbnails from "@/components/frontstore/product/product-card-thumbnails";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { formatNumbers } from "@/lib/utils";
 import { Handbag, HeartIcon, Sparkle, Truck, UserRoundCheck } from "lucide-react";
 import Link from "next/link";
@@ -53,29 +52,26 @@ export default async function Home() {
         </div>
       </div>
 
-      <div className="flex justify-evenly w-full bg-accent py-6 px-4 md:px-4">
-        <div className="w-full text-center space-y-4">
-          <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+      <div className="flex justify-evenly flex-col md:flex-row w-full bg-accent py-6">
+        <div className="w-full text-center space-y-4 p-4 border-b md:border-0 md:border-r border-primary/20">
+          <div className="flex flex-row justify-center items-center gap-2">
             <Sparkle className="text-primary" />
             <h2 className="text-lg md:text-xl font-medium">Qualité Exceptionnelle</h2>
           </div>
           <p className="text-sm lg:text-base text-muted-foreground">Des bijoux élégants, soigneusement sélectionnés pour durer.</p>
         </div>
-        <Separator className="mx-2" orientation="vertical" />
-        <div className="w-full text-center space-y-4">
-          <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+        <div className="w-full text-center space-y-4 p-4 border-b md:border-0 md:border-r border-primary/20">
+          <div className="flex flex-row justify-center items-center gap-2">
             <Truck className="text-primary" />
             <h2 className="text-lg md:text-xl font-medium">Livraison fiable</h2>
           </div>
           <p className="text-sm lg:text-base text-muted-foreground">Livraison rapide et sécurisée dans les 69 wilayas d’Algérie.</p>
         </div>
-        <Separator className="mx-2" orientation="vertical" />
-        <div className="w-full text-center space-y-4">
-          <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+        <div className="w-full text-center space-y-4 p-4">
+          <div className="flex flex-row justify-center items-center gap-2">
             <UserRoundCheck className="text-primary" />
             <h2 className="text-lg md:text-xl font-medium">Le Client D&apos;abord</h2>
           </div>
-
           <p className="text-sm lg:text-base text-muted-foreground">Nous sommes toujours là pour rendre votre expérience exceptionnelle.</p>
         </div>
       </div>

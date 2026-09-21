@@ -13,7 +13,7 @@ export default function FrontstoreLayout({ children }: LayoutProps<"/">) {
                     <AnnouncementBar />
                 </div>
                 <div className="flex justify-between items-center max-w-6xl mx-auto py-5 lg:py-8 px-4 xl:px-0">
-                    <Link href="/" className="text-2xl">BJLX</Link>
+                    <Link href="/" className="text-3xl font-serif">BJLX</Link>
                     <div className="flex items-center gap-6">
                         <Search size={22} className="text-muted-foreground" />
                         <Suspense fallback={<User size={22} className="text-muted-foreground" />}>

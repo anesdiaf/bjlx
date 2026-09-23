@@ -55,18 +55,8 @@ export interface VariantWithValuesImagesType {
         id: number;
         product_id: number | null;
         variant_id: number | null;
-        attribute_id: number | null;
-        value_id: number | null;
-        attribute: {
-            id: number;
-            title: string;
-            createdAt: Date | null;
-            updatedAt: Date | null;
-        } | null;
-        value: {
-            id: number;
-            attribute_id: number | null;
-            value: string;
+        values: {
+            [key: number]: number;
         } | null;
     }[];
     images: {
@@ -78,3 +68,10 @@ export interface VariantWithValuesImagesType {
     }[];
 }
 
+
+export interface VariantValues {
+    [key: number]: number;
+}
+export interface productValues {
+    [key: number]: number[]
+}

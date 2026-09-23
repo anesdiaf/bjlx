@@ -4,6 +4,7 @@ import { user } from "./auth-schema";
 import { index, uniqueIndex } from "drizzle-orm/pg-core";
 import { table } from "console";
 import { defineRelations } from "drizzle-orm";
+import { VariantValues } from "@/types";
 
 
 export const carousel = pgTable("carousel", {
@@ -197,13 +198,107 @@ export const productVariantValues = pgTable("product_variant_values", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     product_id: integer().references(() => product.id, { onDelete: "cascade" }),
     variant_id: integer().references(() => productVariant.id, { onDelete: "cascade" }),
-    attribute_id: integer().references(() => attribute.id, { onDelete: "set null" }),
-    value_id: integer().references(() => attributeValues.id, { onDelete: "set null" })
+    values: jsonb().$type<VariantValues>()
 }, (table) => [
     index("product_value_id_idx").on(table.product_id),
-    index("variant_id_idx").on(table.variant_id),
-    index("variant_attribute_id_idx").on(table.attribute_id),
-    index("value_id_idx").on(table.value_id)
+    index("variant_id_idx").on(table.variant_id)
 ])
 
 export type productVariantValuesType = typeof productVariantValues.$inferSelect;
+
+
+export const shippingProvider = pgTable("shipping_provider", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    title: text(),
+    phone: varchar({ length: 10 }),
+    wilaya_id: integer().references(() => wilaya.id),
+    commune_id: integer().references(() => commune.id),
+    address: varchar({ length: 255 }),
+    postal: varchar({ length: 5 }),
+    createdAt: timestamp().defaultNow(),
+    updatedAt: timestamp().$onUpdate(() => new Date())
+})
+
+export const shippingZone = pgTable("shipping_zone", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    provider_id: integer().references(() => shippingProvider.id, { onDelete: "set null" }),
+    type: varchar({ length: 64 }),
+    price: decimal().notNull(),
+    phone: varchar({ length: 10 }),
+    wilaya_id: integer().references(() => wilaya.id),
+    commune_id: integer().references(() => commune.id),
+    address: varchar({ length: 255 }),
+    postal: varchar({ length: 5 }),
+    createdAt: timestamp().defaultNow(),
+    updatedAt: timestamp().$onUpdate(() => new Date())
+}, (table) => [
+    index("zone_provider_id_idx").on(table.provider_id),
+    index("zone_wilaya_id_idx").on(table.wilaya_id),
+    index("zone_commune_id_idx").on(table.commune_id),
+])
+
+
+
+export const orderStatus = pgTable("order_status", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    title: varchar({ length: 255 }),
+    order: integer()
+})
+
+export const order = pgTable("order", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    order_number: text(),
+    user_id: text().references(() => user.id),
+    status_id: integer().references(() => orderStatus.id),
+    zone_id: integer().references(() => shippingZone.id),
+    subtotal: decimal(),
+    discount: decimal(),
+    shipping_cost: decimal(),
+    total: decimal(),
+    note: text(),
+    guest: boolean().default(true),
+    createdAt: timestamp().defaultNow(),
+    updatedAt: timestamp().$onUpdate(() => new Date())
+}, (table) => [
+    index("order_user_id_idx").on(table.user_id),
+    index("order_zone_id_idx").on(table.zone_id),
+    index("order_status_id_idx").on(table.status_id),
+    index("order_guest_idx").on(table.guest),
+])
+
+export const orderItem = pgTable("order_item", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    order_id: integer().references(() => order.id),
+    product_id: integer().references(() => product.id),
+    variant_id: integer().references(() => productVariant.id),
+    promo: boolean(),
+    qty: integer(),
+    price: decimal(),
+    total: decimal(),
+}, (table) => [
+    index("order_item_order_id_idx").on(table.order_id),
+    index("order_item_product_id_idx").on(table.product_id),
+    index("order_item_variant_id_idx").on(table.variant_id),
+    index("order_item_promo_idx").on(table.promo),
+])
+
+
+export const guestOrderInfo = pgTable("guest_order_info", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    order_id: integer().references(() => order.id),
+    name: varchar({ length: 255 }),
+    phone: varchar({ length: 10 }),
+    wilaya_id: integer().references(() => wilaya.id),
+    commune_id: integer().references(() => commune.id),
+    address: varchar({ length: 255 }),
+    postal: varchar({ length: 5 }),
+})
+
+export const orderHistory = pgTable("order_history", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    order_id: integer().references(() => order.id),
+    status_id: integer().references(() => orderStatus.id),
+    note: text(),
+    createdAt: timestamp().defaultNow(),
+    updatedAt: timestamp().$onUpdate(() => new Date())
+})

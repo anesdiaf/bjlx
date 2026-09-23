@@ -3,8 +3,8 @@
 import { db } from "@/src";
 import { product, productInsertType, productVariant, productVariantValues, producVariantInsertType, producVariantType, variantImage, variantThumbnail } from "@/src/db/schema";
 import { disk } from "@/src/fs";
-import { ActionResult } from "@/types";
-import { and, eq, SQL, sql } from "drizzle-orm";
+import { ActionResult, VariantValues } from "@/types";
+import { and, eq, like, SQL, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -65,49 +65,34 @@ export const getProduct = async (id: number) => {
 
 }
 
-interface Value extends Object {
-    [key: number]: any;
-}
-
-export const getProductVariant = async (product_id: number, values: Value) => {
+export const getProductVariant = async (product_id: number, values: VariantValues) => {
 
     let isSuccess = false;
-    let id: number;
+    let id:number;
     try {
 
-        const sqlChunks: SQL[] = [];
-        sqlChunks.push(sql`select variant_id from product_variant_values`);
-        sqlChunks.push(sql`where`);
+        const variant = await db.select().from(productVariantValues).where(sql`${JSON.stringify(values)}::jsonb @> ${productVariantValues.values}`)
 
-        console.log();
+        console.log("variant", variant);
 
-        Object.keys(values).forEach(k => {
-            sqlChunks.push(sql`attribute_id = ${k}`)
-            sqlChunks.push(sql`and value_id = ${values[Number(k)]}`)
-        })
+        isSuccess = variant[0] ? true : false
 
-        const finalSql: SQL = sql.join(sqlChunks, sql.raw(' '));
-
-        const response = await db.execute(finalSql)
-
-        console.log(response.rows);
-
-        id = response.rows[0].variant_id as number;
-
-        isSuccess = true
+        id = variant[0] ? variant[0].variant_id! : 0
         //return { success: true, data: id }
     } catch (err) {
         if (err instanceof Error) {
             // TypeScript now knows 'error' is an Error object
-            console.log(err.message);
+            console.log("getProductVariant", err.message);
         }
         return { success: false, error: "Erreur lors du chargement des données produit" }
     }
 
 
     if (isSuccess) {
+        revalidatePath(`/products/${product_id}?variant=${id!}`)
         redirect(`/products/${product_id}?variant=${id!}`)
     } else {
+        revalidatePath(`/products/${product_id}`)
         redirect(`/products/${product_id}`)
     }
 }
@@ -124,12 +109,7 @@ export const getProductDetailed = async (id: number) => {
                 variants: {
                     with: {
                         images: true,
-                        values: {
-                            with: {
-                                attribute: true,
-                                value: true
-                            }
-                        }
+                        values: true
                     }
                 }
             }
@@ -355,24 +335,17 @@ export const deleteVariant = async (id: number, productId: number): Promise<Acti
     }
 }
 
-export const setVariantValue = async (attribute_id: number, value_id: number, product_id: number, variant_id: number): Promise<ActionResult> => {
+export const setVariantValue = async (product_id: number, variant_id: number, values: VariantValues): Promise<ActionResult> => {
     try {
 
-        const valueExists = await db.select().from(productVariantValues).where(and(
-            eq(productVariantValues.variant_id, variant_id),
-            eq(productVariantValues.attribute_id, attribute_id)
-        ))
+        const valueExists = await db.select().from(productVariantValues).where(eq(productVariantValues.variant_id, variant_id))
 
         if (valueExists.length !== 0) {
             await db.update(productVariantValues).set({
-                attribute_id, product_id, value_id, variant_id
-            }).where(and(
-                eq(productVariantValues.variant_id, variant_id),
-                eq(productVariantValues.attribute_id, attribute_id)
-            ))
+                product_id, variant_id, values
+            }).where(eq(productVariantValues.variant_id, variant_id))
         } else {
-            await db.insert(productVariantValues)
-                .values({ attribute_id, value_id, product_id, variant_id })
+            await db.insert(productVariantValues).values({ product_id, variant_id, values })
         }
 
         // revalidate path
@@ -388,30 +361,6 @@ export const setVariantValue = async (attribute_id: number, value_id: number, pr
     }
 }
 
-
-
-export const deleteVariantValue = async (attribute_id: number, variant_id: number, product_id: number): Promise<ActionResult> => {
-
-    try {
-        // handle sql query
-        await db.delete(productVariantValues).where(and(
-            eq(productVariantValues.variant_id, variant_id),
-            eq(productVariantValues.attribute_id, attribute_id)
-        ))
-
-        // revalidate path
-        revalidatePath(`/admin/products/edit/${product_id}`)
-
-        return { success: true }
-
-    } catch (err) {
-        if (err instanceof Error) {
-            // TypeScript now knows 'error' is an Error object
-            console.log(err.message);
-        }
-        return { success: false, error: "Erreur lors de la suppression de la valeur d'attribut de variante" }
-    }
-}
 
 
 

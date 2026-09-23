@@ -9,7 +9,7 @@ import {
     SidebarMenuButton,
 } from "@/components/ui/sidebar"
 import { auth } from "@/lib/auth"
-import { AdIcon, Bolt, Box, DiamondIcon, GalleryHorizontal, Home, LinkIcon, LogOutIcon, LucideHash, SquareDashed, TagIcon, UserCheck2, UserIcon } from "lucide-react"
+import { AdIcon, Bolt, Box, DiamondIcon, GalleryHorizontal, Home, LinkIcon, LogOutIcon, LucideHash, SquareDashed, TagIcon, Truck, UserCheck2, UserIcon } from "lucide-react"
 import { headers } from "next/headers"
 import Link from "next/link"
 import { redirect } from "next/navigation"
@@ -71,6 +71,15 @@ export function AppSidebar() {
                             <Box />
                             <span>Commandes</span>
                         </SidebarMenuButton>
+                        <SidebarMenuButton render={<Link href="/admin/products" />} >
+                            <Truck />
+                            <span>Livraison</span>
+                        </SidebarMenuButton>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+                <SidebarGroup>
+                    <SidebarGroupLabel>Utilisateurs</SidebarGroupLabel>
+                    <SidebarGroupContent>
                         <SidebarMenuButton render={<Link href="/admin/customers" />} >
                             <UserIcon />
                             <span>Clients</span>

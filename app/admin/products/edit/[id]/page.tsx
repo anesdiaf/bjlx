@@ -102,7 +102,7 @@ export default async function EditProductAdminPage({
                                             <TableCell>{v.default && <CheckIcon size={16} />}</TableCell>
                                             <TableCell>{v.status ? <Badge className="bg-green-400/20 text-green-700">Active</Badge> : <Badge variant="destructive">Inactive</Badge>}</TableCell>
                                             <TableCell className="text-right space-x-2 flex justify-center items-center">
-                                                <SetAttributesForm variantValues={variantValues.filter(va => va.variant_id === v.id)} attributes={attributes} id={v.id} productId={id} />
+                                                <SetAttributesForm variantValues={variantValues.find(va => va.variant_id === v.id)} attributes={attributes} id={v.id} productId={id} />
                                                 <ProductImagesForm id={v.id} productId={id} prodcutImages={prodcutImages} productThumbnails={prodcutThumbnails}/>
                                                 <EditVariantForm id={v.id}/>
                                                 <DeleteVariantButton id={v.id} productId={id} />

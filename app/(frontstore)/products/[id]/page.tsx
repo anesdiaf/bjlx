@@ -2,15 +2,13 @@ export const revalidate = 60;
 
 import { getAttributes } from "@/app/actions/attributes";
 import { getProduct, getProductDetailed } from "@/app/actions/products";
-import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Separator } from "@/components/ui/separator";
-import { attributeType, attributeValuesType } from "@/src/db/schema";
 import { CheckCircle, XCircle } from "lucide-react";
 import { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import OrderForm from "./order-form";
-import { AttributesObjectsWithValues, AttributeWithValuesType, VaraintValuesWithData } from "@/types";
+import { productValues } from "@/types";
 import { formatNumbers } from "@/lib/utils";
 
 
@@ -67,21 +65,31 @@ export default async function SingleProductPage({
     }
 
     // Cross-check these to visualize variants choices
-    const { data: attributes } = await getAttributes()
+    const { data: attributes } = await getAttributes();
 
-    let currentValues: AttributesObjectsWithValues = {};
+    let currentValues: productValues = {};
 
     if (variants.length > 1) {
 
+        //variants.map(v => {
+        //    v.values.map(vv => {
+        //        if (!currentValues[vv.attribute_id!]) {
+        //            currentValues[vv.attribute_id!] = []
+        //        }
+        //        currentValues[vv.attribute_id!].push(vv)
+        //    })
+        //})
         variants.map(v => {
-            v.values.map(vv => {
-                if (!currentValues[vv.attribute_id!]) {
-                    currentValues[vv.attribute_id!] = []
-                }
-                currentValues[vv.attribute_id!].push(vv)
-            })
+            const values = v.values[0].values;
+            if (values) {
+                Object.keys(values).forEach(key => {
+                    if(!currentValues[Number(key)]){
+                        currentValues[Number(key)] = []
+                    }
+                    currentValues[Number(key)].push(values[Number(key)])
+                })
+            }
         })
-
     }
     // Variant Images
     const prodcutImages = currentVariant.images
@@ -139,7 +147,7 @@ export default async function SingleProductPage({
                             <p>En stock - délai de livraison 2-5 jours ouvrables</p>
                         </div>
                     }
-                    <OrderForm attributes={attributes!} id={id} currentVariant={currentVariant} currentValues={currentValues} />
+                    <OrderForm attributes={attributes!} id={id} variant={Number(variant)} currentVariant={currentVariant} currentValues={currentValues} />
                 </div>
             </div>
             <div className="space-y-8">

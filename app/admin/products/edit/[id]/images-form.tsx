@@ -257,7 +257,7 @@ export default function ProductImagesForm(
                                         <CameraIcon className="text-primary" />
                                     </div>
                                 </FieldLabel>
-                                <Input id="image" name="image" type="file" placeholder="Max Leiter" hidden onChange={e => { e.target.files?.length !== 0 && setImageBlob(e.target.files![0]) }} accept=".png, .avif, .webp" />
+                                <Input id="image" name="image" type="file" placeholder="Max Leiter" hidden onChange={e => { e.target.files?.length !== 0 && setImageBlob(e.target.files![0]) }} accept=".webp" />
                             </Field>
                         )}
 

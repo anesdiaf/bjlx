@@ -17,17 +17,13 @@ export const relations = defineRelations({ product, productVariant, productVaria
         thumbnails: r.many.variantThumbnail()
     },
     productVariantValues: {
+        product: r.one.product({
+            from: r.productVariantValues.product_id,
+            to: r.product.id
+        }),
         variant: r.one.productVariant({
             from: r.productVariantValues.variant_id,
             to: r.productVariant.id
-        }),
-        attribute: r.one.attribute({
-            from: r.productVariantValues.attribute_id,
-            to: r.attribute.id
-        }),
-        value: r.one.attributeValues({
-            from: r.productVariantValues.value_id,
-            to: r.attributeValues.id
         })
     },
     variantImage: {
@@ -44,7 +40,6 @@ export const relations = defineRelations({ product, productVariant, productVaria
     },
     attribute: {
         values: r.many.attributeValues(),
-        variantValues: r.many.productVariantValues()
     },
     attributeValues: {
         attribute: r.one.attribute({

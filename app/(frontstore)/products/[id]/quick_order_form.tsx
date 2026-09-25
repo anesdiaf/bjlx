@@ -132,7 +132,7 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                     </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 group">
-                    <div className="h-[22dvh] overflow-y-auto pr-2 space-y-4">
+                    <div className="h-[27dvh] overflow-y-auto pr-2 space-y-4">
                         <Controller
                             name="name"
                             control={form.control}

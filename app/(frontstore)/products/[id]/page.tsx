@@ -79,7 +79,7 @@ export default async function SingleProductPage({
             const values = v.values[0].values;
             if (values) {
                 Object.keys(values).forEach(key => {
-                    if(!currentValues[Number(key)]){
+                    if (!currentValues[Number(key)]) {
                         currentValues[Number(key)] = []
                     }
                     currentValues[Number(key)].push(values[Number(key)])
@@ -91,19 +91,23 @@ export default async function SingleProductPage({
     const prodcutImages = currentVariant.images
 
 
-    const session= await auth.api.getSession({
+    const session = await auth.api.getSession({
         headers: await headers()
     })
 
     const user = session?.user;
-    const currentUserInfo= await db.query.userInfo.findFirst({
-        where: {
-            user_id: user?.id
-        },
-        with: {
-            user: true
-        }
-    })
+    let currentUserInfo;
+    if (user) {
+        currentUserInfo = await db.query.userInfo.findFirst({
+            where: {
+                user_id: user?.id
+            },
+            with: {
+                user: true
+            }
+        })
+    }
+
 
 
 
@@ -160,7 +164,7 @@ export default async function SingleProductPage({
                             <p>En stock - délai de livraison 2-5 jours ouvrables</p>
                         </div>
                     }
-                    <OrderForm userInfo={currentUserInfo}  attributes={attributes!} currentProduct={currentProduct} variant_id={Number(variant)} currentVariant={currentVariant} currentValues={currentValues} />
+                    <OrderForm userInfo={currentUserInfo} attributes={attributes!} currentProduct={currentProduct} variant_id={Number(variant)} currentVariant={currentVariant} currentValues={currentValues} />
                 </div>
             </div>
             <div className="space-y-8">

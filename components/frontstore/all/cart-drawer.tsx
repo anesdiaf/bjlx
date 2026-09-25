@@ -25,6 +25,8 @@ import {
     PopoverTitle,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { attributeValuesType, attributeWithValuesType } from "@/src/db/schema"
+import { getAttributes } from "@/app/actions/attributes"
 
 
 
@@ -38,6 +40,7 @@ export default function CartDrawer() {
     const [total, setTotal] = useState<number>(0)
     const [qty, setQty] = useState<number>(0)
 
+    const [variantAttributes, setVariantAttributes] = useState<attributeWithValuesType[]>([])
 
     useEffect(() => {
         let currSubtotal = 0;
@@ -66,6 +69,16 @@ export default function CartDrawer() {
         setDiscount(currDiscount)
         setTotal(currTotal)
         setQty(totalQty)
+
+
+        if (variantAttributes.length === 0) {
+            getAttributes()
+                .then(res => {
+                    if (res.success) {
+                        setVariantAttributes(res.data!)
+                    }
+                })
+        }
     }, [isOpen, items])
 
 
@@ -79,7 +92,7 @@ export default function CartDrawer() {
                     </p>
                 }
             </DrawerTrigger>
-            <DrawerContent className="w-[92vw] md:min-w-100 md:w-fit">
+            <DrawerContent className="w-[94vw] md:min-w-110 md:w-fit">
                 <DrawerHeader>
                     <DrawerTitle>Votre panier</DrawerTitle>
                     <DrawerDescription>Votre sélection, prête à briller.</DrawerDescription>
@@ -99,51 +112,68 @@ export default function CartDrawer() {
                         <div className="flex flex-col items-center gap-4 w-full">
                             {items.map((item, index) => {
                                 return (
-                                    <div key={item.id} className="border-b border-dashed w-full py-3 flex items-start gap-2">
-                                        <div className="aspect-square size-18 md:size-32 border flex justify-center items-center">
-                                            {item.images[0].url ?
-                                                <Image className="object-cover w-full h-full" src={`/api/uploads${item.images[0].url}`} width={128} height={128} alt={item.title} />
-                                                :
-                                                <ImageOff />
-                                            }
-
-                                        </div>
-                                        <div className="w-full flex flex-col gap-2">
-                                            <Link onClick={() => close()} href={`/products/${item.product_id}?variant=${item.id}`}>{item.title}</Link>
-                                            <div>
-
-                                            </div>
-                                            <div className="w-full flex justify-between items-center">
-                                                <div className="flex items-center w-full">
-                                                    <Button
-                                                        onClick={() => { item.qty > 1 && changeQty(item.id, item.qty - 1) }} variant="outline" size="icon-sm"><ChevronDown /></Button>
-                                                    <p className="w-12 flex items-center justify-center border-y h-9">
-                                                        {item.qty}
-                                                    </p>
-                                                    <Button
-                                                        onClick={() => { (item.track_stock && item.qty < item.stock!) && changeQty(item.id, item.qty + 1) }} variant="outline" size="icon-sm"><ChevronUp /></Button>
-                                                    <Popover>
-                                                        <PopoverTrigger render={<Button
-                                                            variant="destructive" size="icon-sm" className="border-red-500/12"><Trash2Icon /></Button>} />
-                                                        <PopoverContent>
-                                                            <PopoverHeader>
-                                                                <PopoverTitle>Confirmation</PopoverTitle>
-                                                            </PopoverHeader>
-                                                            <Button onClick={() => { remove(item.id) }}>Confirmer</Button>
-                                                        </PopoverContent>
-                                                    </Popover>
-
-                                                </div>
-                                                <div>
-                                                    {item.on_promo
-                                                        ? <div><p className="whitespace-nowrap fontme">{formatNumbers(Number(item.promo_price) * item.qty)} D.A</p> <p className="whitespace-nowrap line-through text-xs float-right text-muted-foreground">{formatNumbers(Number(item.price) * item.qty)} D.A</p></div>
-                                                        : <p className="whitespace-nowrap">{formatNumbers(Number(item.price) * item.qty)} D.A</p>}
-                                                </div>
+                                    <div className="flex flex-col w-full">
+                                        <Link onClick={() => close()} href={`/products/${item.product_id}?variant=${item.id}`}>{item.title}</Link>
+                                        <div key={item.id} className="border-b border-dashed w-full py-3 flex items-end gap-2">
+                                            <div className="aspect-square size-18 md:size-32 border flex justify-center items-center">
+                                                {item.images[0].url ?
+                                                    <Image className="object-cover w-full h-full" src={`/api/uploads${item.images[0].url}`} width={128} height={128} alt={item.title} />
+                                                    :
+                                                    <ImageOff />
+                                                }
                                             </div>
 
-                                        </div>
+                                            <div className="w-full flex flex-col h-full justify-between gap-2">
+                                                <div className="flex-1 h-full flex items-center gap-2">
+                                                    <p className="text-xs text-muted-foreground">{item.sku}</p>
+                                                    {item.values.length !== 0 && item.values[0].values &&
+                                                        <div className="flex items-center gap-2">
+                                                            {Object.keys(item.values[0].values!).map((a, index) => {
+                                                                const attrID = Number(a)
+                                                                const currentAttribute = variantAttributes.find(attr => attr.id === attrID)
+                                                                const attributeTitle = currentAttribute?.title
+                                                                const attributeValue = currentAttribute?.values.find(v => v.id === item.values[0].values![attrID])?.value
 
+                                                                return (
+                                                                    <p className="text-xs">{index === 0 && " - "} {attributeTitle}:<span> {attributeValue}</span> {index !== Object.keys(item.values[0].values!).length - 1 && " - "}</p>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div className="w-full flex justify-between items-center">
+                                                    <div className="flex items-center w-full">
+                                                        <Button
+                                                            onClick={() => { item.qty > 1 && changeQty(item.id, item.qty - 1) }} variant="outline" size="icon-sm"><ChevronDown /></Button>
+                                                        <p className="w-12 flex items-center justify-center border-y h-9">
+                                                            {item.qty}
+                                                        </p>
+                                                        <Button
+                                                            onClick={() => { (item.track_stock && item.qty < item.stock!) && changeQty(item.id, item.qty + 1) }} variant="outline" size="icon-sm"><ChevronUp /></Button>
+                                                        <Popover>
+                                                            <PopoverTrigger render={<Button
+                                                                variant="destructive" size="icon-sm" className="border-red-500/12"><Trash2Icon /></Button>} />
+                                                            <PopoverContent>
+                                                                <PopoverHeader>
+                                                                    <PopoverTitle>Confirmation</PopoverTitle>
+                                                                </PopoverHeader>
+                                                                <Button onClick={() => { remove(item.id) }}>Confirmer</Button>
+                                                            </PopoverContent>
+                                                        </Popover>
+
+                                                    </div>
+                                                    <div>
+                                                        {item.on_promo
+                                                            ? <div><p className="whitespace-nowrap fontme">{formatNumbers(Number(item.promo_price) * item.qty)} D.A</p> <p className="whitespace-nowrap line-through text-xs float-right text-muted-foreground">{formatNumbers(Number(item.price) * item.qty)} D.A</p></div>
+                                                            : <p className="whitespace-nowrap">{formatNumbers(Number(item.price) * item.qty)} D.A</p>}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
                                     </div>
+
                                 )
                             })}
                         </div>

@@ -1,12 +1,5 @@
+import { variantImageType } from "@/src/db/schema";
 import z from "zod";
-
-
-
-
-
-
-
-
 
 
 // User
@@ -154,6 +147,8 @@ export interface VariantWithValuesImagesType {
 }
 
 
+
+
 export interface VariantValues {
     [key: number]: number;
 }
@@ -209,6 +204,61 @@ export interface WilayasWithCommunesType {
 }
 
 
+export interface CartProductVariantType {
+    id: number;
+    status: boolean | null;
+    default: boolean | null;
+    product_id: number | null;
+    sku: string;
+    stock: number | null;
+    track_stock: boolean | null;
+    price: string;
+    buy_price: string;
+    promo_price: string | null;
+    on_promo: boolean | null;
+    qty: number | null;
+    product: {
+        id: number;
+        title: string;
+        desc: string | null;
+        status: boolean | null;
+        meta_url_key: string;
+        meta_title: string;
+        meta_desc: string;
+        createdAt: Date | null;
+        updatedAt: Date | null;
+        category_id: number | null;
+        collection_id: number | null;
+        featured: boolean | null;
+    } | null;
+    values: {
+        id: number;
+        product_id: number | null;
+        variant_id: number | null;
+        values: VariantValues | null;
+    }[];
+    thumbnails: {
+        id: number;
+        order: number | null;
+        product_id: number | null;
+        variant_id: number | null;
+        url: string;
+    }[];
+}
+
+// Orders
+// Cart
+export type SingleCartItemType =  {title: string, qty: number} & VariantWithValuesImagesType;
+export interface CartItemsType {
+    items: SingleCartItemType[]
+    isOpen: boolean
+    add: (item: SingleCartItemType) => void,
+    remove: (id: number) => void,
+    changeQty: (id: number, qty: number) => void
+    open: () => void
+    close: () => void
+}
+
 
 // Form schemas
 export const providerFromSchema = z.object({
@@ -244,3 +294,5 @@ export const quickOrderFormScema = z.object({
     zone_id: z.number().optional(),
     guest_order: z.boolean()
 })
+
+

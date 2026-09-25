@@ -1,6 +1,7 @@
 "use client"
 
 
+import { createQuickOrder } from "@/app/actions/orders";
 import { getShippingZonesByWilaya, getWilayaCommunes, getWilayas } from "@/app/actions/shipping";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -10,11 +11,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/toast";
 import { cn, formatNumbers } from "@/lib/utils";
 import { communeType, shippingZoneType, userDataType, wilayaType } from "@/src/db/schema";
 import { PorductWithDetailsType, quickOrderFormScema, userWithDataType, VariantWithValuesImagesType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { XIcon } from "lucide-react";
+import { ArrowLeft, CheckCircle2Icon, Divide, XIcon } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -26,6 +29,8 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
     const [communes, setCommunes] = useState<communeType[]>([]);
     const [zones, setZones] = useState<shippingZoneType[]>([]);
     const [loadingZones, setLoadingZones] = useState<boolean>(false)
+
+    const [step, setStep] = useState<number>(1);
 
 
 
@@ -50,29 +55,32 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
 
         console.log(data);
 
-        //const response = await createShippingZone(data)
+        const response = await createQuickOrder()
 
 
-        //if (response.success) {
+        if (response.success) {
 
-        //    toast.add({
-        //        title: "Zone d'expédition créée avec succès",
-        //        type: "success"
-        //    })
+            setStep(3)
+            form.reset()
+            toast.add({
+                title: "Votre commande a bien été confirmée.",
+                type: "success"
+            })
 
-        //    setOpen(false)
+           //setOpen(false)
 
-        //} else {
-        //    toast.add({
-        //        title: response.error,
-        //        type: "error"
-        //    })
-        //}
+        } else {
+            toast.add({
+                title: response.error,
+                type: "error"
+            })
+        }
     }
 
 
 
     const wilaya = form.watch("wilaya_id")
+    const commune = form.watch("commune_id")
     const zone_id = form.watch("zone_id")
 
     useEffect(() => {
@@ -90,6 +98,17 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                     .then(res => {
                         if (res.success) {
                             setCommunes(res.data)
+                        }
+                    })
+            }
+            if (wilaya) {
+                getShippingZonesByWilaya(wilaya)
+                    .then(res => {
+                        if (res.success) {
+                            setZones(res.data)
+                            res.data.length !== 0 ? form.setValue("zone_id", res.data[0].id) : form.setValue("zone_id", undefined)
+                            //console.log(res.data[0].id);
+                            setLoadingZones(false)
                         }
                     })
             }
@@ -126,13 +145,14 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
             <DialogTrigger onClick={() => setOpen(true)} render={<Button className="w-full">Acheter maintenant</Button>} />
             <DialogContent showCloseButton={false} className="w-full sm:max-w-200">
                 <DialogHeader>
-                    <DialogTitle className="w-full flex justify-between items-center">
-                        Passer une commande
-                        <Button onClick={() => setOpen(false)} type="button" variant="ghost" size="icon-sm"><XIcon /></Button>
+                    <DialogTitle className={cn(step === 3 ? "w-full flex justify-end items-center" : "w-full flex justify-between items-center")}>
+                        {step === 1 && "Vos informations"}
+                        {step === 2 && "Livraison info et resumé"}
+                        <Button onClick={() => setOpen(false)} type="button" variant="ghost" size="icon-sm" className="float-right"><XIcon /></Button>
                     </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 group">
-                    <div className="h-[27dvh] overflow-y-auto pr-2 space-y-4">
+                    {step === 1 && <div className="space-y-4">
                         <Controller
                             name="name"
                             control={form.control}
@@ -283,8 +303,9 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                                 </Field>
                             )}
                         />
-                    </div>
-                    <div>
+                    </div>}
+
+                    {step === 2 && <><div>
                         {!loadingZones ?
                             <>
                                 {zones.length !== 0 ?
@@ -339,41 +360,65 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
 
                         }
                     </div>
-                    <div className={cn("w-full border border-dashed px-2 origin-top transition", zone_id ? "scale-y-100 h-fit" : "scale-y-0 h-0")}>
-                        <div className="w-full flex justify-between border-b border-dashed py-3">
-                            <p>Article: </p>
-                            <p>{currentProduct.title}</p>
-                        </div>
-                        <div className="w-full flex justify-between border-b border-dashed py-3">
-                            <p>{currentVariant.on_promo ? "Prix ​​unitaire" : "Prix"}</p>
-                            <p>{formatNumbers(currentVariant.price, "DZ-dz")} D.A</p>
-                        </div>
-                        {currentVariant.on_promo && (
-                            <>
-                                <div className="w-full flex justify-between border-b border-dashed py-3">
-                                    <p>Remise: </p>
-                                    <p>{formatNumbers((Number(currentVariant.price) - Number(currentVariant.promo_price)), "DZ-dz")} D.A</p>
-                                </div>
-                                <div className="w-full flex justify-between border-b border-dashed py-3">
-                                    <p>Prix promo: </p>
-                                    <p>{formatNumbers(currentVariant.promo_price!, "DZ-dz")} D.A</p>
-                                </div>
-                            </>
-                        )}
-                        <div className="w-full flex justify-between py-3">
-                            <p>Frais de livraison: </p>
-                            <p>{formatNumbers(zones.find(z => z.id == zone_id)?.price, "DZ-dz")} D.A</p>
-                        </div>
-                    </div>
-                    <Button className="w-full" variant="default" type="submit" disabled={zone_id ? false : true}>
-                        Commander
-                        {zone_id && !Number.isNaN(zone_id) && !Number.isNaN(zones.find(z => z.id === zone_id)?.price) &&
-                            <span>
-                                ( {formatNumbers(Number(zones.find(z => z.id == zone_id)?.price) + (currentVariant.on_promo ? Number(currentVariant.promo_price) : Number(currentVariant.price)), "us")} D.A )
-                            </span>
-                        }
+                        <div className={cn("w-full border border-dashed px-2 origin-top transition", zone_id ? "scale-y-100 h-fit" : "scale-y-0 h-0")}>
+                            <div className="w-full flex justify-between border-b border-dashed py-3">
+                                <p>Article: </p>
+                                <p>{currentProduct.title}</p>
+                            </div>
+                            <div className="w-full flex justify-between border-b border-dashed py-3">
+                                <p>{currentVariant.on_promo ? "Prix ​​unitaire" : "Prix"}</p>
+                                <p>{formatNumbers(currentVariant.price, "DZ-dz")} D.A</p>
+                            </div>
+                            {currentVariant.on_promo && (
+                                <>
+                                    <div className="w-full flex justify-between border-b border-dashed py-3">
+                                        <p>Remise: </p>
+                                        <p>{formatNumbers((Number(currentVariant.price) - Number(currentVariant.promo_price)), "DZ-dz")} D.A</p>
+                                    </div>
+                                    <div className="w-full flex justify-between border-b border-dashed py-3">
+                                        <p>Prix promo: </p>
+                                        <p>{formatNumbers(currentVariant.promo_price!, "DZ-dz")} D.A</p>
+                                    </div>
+                                </>
+                            )}
+                            <div className="w-full flex justify-between border-b border-dashed py-3">
+                                <p>Frais de livraison: </p>
+                                <p>{formatNumbers(zones.find(z => z.id == zone_id)?.price, "DZ-dz")} D.A</p>
+                            </div>
+                            <div className="w-full flex justify-between py-3">
+                                <p>Total: </p>
+                                <p>{formatNumbers(Number(zones.find(z => z.id == zone_id)?.price) + (currentVariant.on_promo ? Number(currentVariant.promo_price) : Number(currentVariant.price)), "us")} D.A</p>
+                            </div>
+                        </div></>}
 
-                    </Button>
+
+                    {step === 3 &&
+                        <div className="w-full flex flex-col items-center gap-6">
+                            <CheckCircle2Icon size={128} className="text-green-500" />
+                            <h1 className="text-lg font-bold text-center">Merci pour votre commande !</h1>
+                            <div className="w-full flex flex-col items-center">
+                                <p>Votre commande a bien été confirmée.</p>
+                                <span className="text-muted-foreground">Nous vous contacterons prochainement pour la confirmer et préparer son expédition.</span>
+                            </div>
+                            <Link className="text-primary font-medium w-full" href="/track-order"><Button variant="secondary" className="w-full">Suivre la commande</Button></Link>
+                            <Button onClick={() => { setOpen(false); setStep(1)}} className="w-full">Fermer</Button>
+                        </div>
+                    }
+
+
+                    {step === 1 && <Button className="w-full" variant="default" onClick={() => setStep(2)} disabled={commune ? false : true}>Suivant</Button>}
+                    {step === 2 && <div className="flex items-center gap-3">
+                        <Button onClick={() => setStep(1)}><ArrowLeft /></Button>
+                        <Button className="flex-1" variant="default" type="submit" disabled={zone_id ? false : true}>
+                            Commander
+                            {zone_id && !Number.isNaN(zone_id) && !Number.isNaN(zones.find(z => z.id === zone_id)?.price) &&
+                                <span>
+                                    ( {formatNumbers(Number(zones.find(z => z.id == zone_id)?.price) + (currentVariant.on_promo ? Number(currentVariant.promo_price) : Number(currentVariant.price)), "us")} D.A )
+                                </span>
+                            }
+                        </Button>
+                    </div>}
+
                 </form>
             </DialogContent>
         </Dialog>

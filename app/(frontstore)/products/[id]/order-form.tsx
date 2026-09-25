@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { AttributeWithValuesType, PorductWithDetailsType, productValues, userWithDataType, VariantValues, VariantWithValuesImagesType } from "@/types";
 import { useEffect, useState } from "react";
 import QuickOrderForm from "./quick_order_form";
+import AddItemToCartButton from "./add-cart-button";
 
 
 
@@ -34,7 +35,6 @@ export default function OrderForm({ attributes, currentProduct, currentVariant, 
 
     useEffect(() => {
         getProductVariant(currentVariant.product_id!, values)
-        console.log(values);
     }, [values])
 
     useEffect(() => {
@@ -71,7 +71,7 @@ export default function OrderForm({ attributes, currentProduct, currentVariant, 
                 })}
             </div>
             <div className="space-y-4">
-                <Button className="w-full">Ajouter au panier</Button>
+                <AddItemToCartButton title={currentProduct.title} variant={currentVariant}/>
                 <QuickOrderForm userInfo={userInfo} currentProduct={currentProduct} currentVariant={currentVariant}/>
             </div>
         </div>

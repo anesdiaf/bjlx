@@ -26,7 +26,7 @@ export default async function Home() {
             const { price, promo_price, on_promo, thumbnails } = p.variants[0];
             return (
               <Link href={`/products/${p.id}`} key={p.id} className="w-full space-y-3 relative">
-                <div className="flex flex-col gap-2 absolute top-1 right-1 z-999">
+                <div className="flex flex-col gap-2 absolute top-1 right-1 z-50">
                   <Button className="  group" size="icon-sm" variant="ghost"><HeartIcon className="group-hover:fill-primary transition" /></Button>
                   {on_promo && <Badge className="bg-primary/50 text-white aspect-square">{(100 - ((Number(promo_price) * 100) / Number(price))).toFixed(1)}%</Badge>}
                 </div>

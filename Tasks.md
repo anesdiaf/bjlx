@@ -7,7 +7,7 @@
 7. Required page (privacy, contact...)
 
 
-Stopped at Shipping providers and zones editing zones and providers and consider giving zones titles and map coords
+Stopped at Ordering zone by wilaya code
 
 
 The ideal image aspect should be a an aspect of a square 1:1
@@ -26,7 +26,7 @@ Actual Todos (These deferred because i need to prioritize things over others):
 
 4. Customer can't order if stock is track and stock is 0 or below
 
-
+5. Consider giving zones titles and map coords
 
 
 

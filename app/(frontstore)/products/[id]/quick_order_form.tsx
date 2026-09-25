@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
@@ -131,114 +132,18 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                     </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 group">
-                    <Controller
-                        name="name"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel htmlFor="name">
-                                    Nom complet
-                                </FieldLabel>
-                                <Input
-                                    {...field}
-                                    id="name"
-                                    aria-invalid={fieldState.invalid}
-                                />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        )}
-                    />
-                    <Controller
-                        name="phone"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel htmlFor="phone">
-                                    Téléphone
-                                </FieldLabel>
-                                <Input
-                                    {...field}
-                                    id="phone"
-                                    aria-invalid={fieldState.invalid}
-                                />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        )}
-                    />
-                    <FieldGroup className="grid grid-cols-2">
+                    <div className="h-[22dvh] overflow-y-auto pr-2 space-y-4">
                         <Controller
-                            name="wilaya_id"
+                            name="name"
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="wilaya_id">
-                                        Wilaya
-                                    </FieldLabel>
-                                    <Select id="wilaya" name={field.name} required
-                                        value={field.value ?? ""}
-                                        onValueChange={field.onChange}>
-                                        <SelectTrigger className="w-full" aria-invalid={fieldState.invalid}>
-                                            <SelectValue placeholder="Wilaya">{wilayas.find(w => w.id === field.value)?.name}</SelectValue>
-                                        </SelectTrigger>
-                                        <SelectContent >
-                                            {wilayas.map((item) => (
-                                                <SelectItem key={item.code} value={item.id}>
-                                                    {item.code} - {item.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    {fieldState.invalid && (
-                                        <FieldError errors={[fieldState.error]} />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        <Controller
-                            name="commune_id"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="commune_id">
-                                        Commune
-                                    </FieldLabel>
-                                    <Select id="commune_id" name={field.name} required
-                                        value={field.value ?? ""}
-                                        onValueChange={field.onChange}>
-                                        <SelectTrigger className="w-full" aria-invalid={fieldState.invalid}>
-                                            <SelectValue placeholder="Commune">{communes.find(c => c.id === field.value)?.name}</SelectValue>
-                                        </SelectTrigger>
-                                        <SelectContent >
-                                            {communes.map((item) => (
-                                                <SelectItem key={item.post_code} value={item.id}>
-                                                    {item.post_code} - {item.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    {fieldState.invalid && (
-                                        <FieldError errors={[fieldState.error]} />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                    </FieldGroup>
-                    <FieldGroup className="grid grid-cols-2">
-                        <Controller
-                            name="address"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="address">
-                                        Adresse
+                                    <FieldLabel htmlFor="name">
+                                        Nom complet
                                     </FieldLabel>
                                     <Input
                                         {...field}
-                                        id="address"
+                                        id="name"
                                         aria-invalid={fieldState.invalid}
                                     />
                                     {fieldState.invalid && (
@@ -248,17 +153,16 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                             )}
                         />
                         <Controller
-                            name="postal"
+                            name="phone"
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="postal">
-                                        Code postal
+                                    <FieldLabel htmlFor="phone">
+                                        Téléphone
                                     </FieldLabel>
                                     <Input
                                         {...field}
-                                        id="postal"
-                                        maxLength={10}
+                                        id="phone"
                                         aria-invalid={fieldState.invalid}
                                     />
                                     {fieldState.invalid && (
@@ -267,20 +171,119 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                                 </Field>
                             )}
                         />
-                    </FieldGroup>
-                    <Controller
-                        name="note"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel htmlFor="note">Note</FieldLabel>
-                                <Textarea {...field} aria-invalid={fieldState.invalid} />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
+                        <FieldGroup className="grid grid-cols-2">
+                            <Controller
+                                name="wilaya_id"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="wilaya_id">
+                                            Wilaya
+                                        </FieldLabel>
+                                        <Select id="wilaya" name={field.name} required
+                                            value={field.value ?? ""}
+                                            onValueChange={field.onChange}>
+                                            <SelectTrigger className="w-full" aria-invalid={fieldState.invalid}>
+                                                <SelectValue placeholder="Wilaya">{wilayas.find(w => w.id === field.value)?.name}</SelectValue>
+                                            </SelectTrigger>
+                                            <SelectContent >
+                                                {wilayas.map((item) => (
+                                                    <SelectItem key={item.code} value={item.id}>
+                                                        {item.code} - {item.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        {fieldState.invalid && (
+                                            <FieldError errors={[fieldState.error]} />
+                                        )}
+                                    </Field>
                                 )}
-                            </Field>
-                        )}
-                    />
+                            />
+                            <Controller
+                                name="commune_id"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="commune_id">
+                                            Commune
+                                        </FieldLabel>
+                                        <Select id="commune_id" name={field.name} required
+                                            value={field.value ?? ""}
+                                            onValueChange={field.onChange}>
+                                            <SelectTrigger className="w-full" aria-invalid={fieldState.invalid}>
+                                                <SelectValue placeholder="Commune">{communes.find(c => c.id === field.value)?.name}</SelectValue>
+                                            </SelectTrigger>
+                                            <SelectContent >
+                                                {communes.map((item) => (
+                                                    <SelectItem key={item.post_code} value={item.id}>
+                                                        {item.post_code} - {item.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        {fieldState.invalid && (
+                                            <FieldError errors={[fieldState.error]} />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                        </FieldGroup>
+                        <FieldGroup className="grid grid-cols-2">
+                            <Controller
+                                name="address"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="address">
+                                            Adresse
+                                        </FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id="address"
+                                            aria-invalid={fieldState.invalid}
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError errors={[fieldState.error]} />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                            <Controller
+                                name="postal"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="postal">
+                                            Code postal
+                                        </FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id="postal"
+                                            maxLength={10}
+                                            aria-invalid={fieldState.invalid}
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError errors={[fieldState.error]} />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                        </FieldGroup>
+                        <Controller
+                            name="note"
+                            control={form.control}
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={fieldState.invalid}>
+                                    <FieldLabel htmlFor="note">Note</FieldLabel>
+                                    <Textarea {...field} aria-invalid={fieldState.invalid} />
+                                    {fieldState.invalid && (
+                                        <FieldError errors={[fieldState.error]} />
+                                    )}
+                                </Field>
+                            )}
+                        />
+                    </div>
                     <div>
                         {!loadingZones ?
                             <>
@@ -335,7 +338,6 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                             </div>
 
                         }
-
                     </div>
                     <div className={cn("w-full border border-dashed px-2 origin-top transition", zone_id ? "scale-y-100 h-fit" : "scale-y-0 h-0")}>
                         <div className="w-full flex justify-between border-b border-dashed py-3">

@@ -4,13 +4,14 @@ import { getProductVariant } from "@/app/actions/products";
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AttributeWithValuesType, productValues, VariantValues, VariantWithValuesImagesType } from "@/types";
+import { AttributeWithValuesType, PorductWithDetailsType, productValues, userWithDataType, VariantValues, VariantWithValuesImagesType } from "@/types";
 import { useEffect, useState } from "react";
 import QuickOrderForm from "./quick_order_form";
 
 
 
-export default function OrderForm({ attributes, id, currentVariant, currentValues, variant }: { attributes: AttributeWithValuesType[], id: number, currentVariant: VariantWithValuesImagesType, currentValues: productValues, variant?: number }) {
+export default function OrderForm({ attributes, currentProduct, currentVariant, currentValues, variant_id, userInfo }
+    : { userInfo?: userWithDataType, attributes: AttributeWithValuesType[], currentProduct: PorductWithDetailsType, currentVariant: VariantWithValuesImagesType, currentValues: productValues, variant_id?: number }) {
 
     // This made so i can export data later to order
     const [values, setValues] = useState<VariantValues>({})
@@ -38,7 +39,7 @@ export default function OrderForm({ attributes, id, currentVariant, currentValue
 
     useEffect(() => {
         currentVariant.values.length !== 0 && setValues(currentVariant.values[0].values!)
-    }, [variant])
+    }, [variant_id])
 
     return (
         <div className="space-y-4">
@@ -71,7 +72,7 @@ export default function OrderForm({ attributes, id, currentVariant, currentValue
             </div>
             <div className="space-y-4">
                 <Button className="w-full">Ajouter au panier</Button>
-                <QuickOrderForm/>
+                <QuickOrderForm userInfo={userInfo} currentProduct={currentProduct} currentVariant={currentVariant}/>
             </div>
         </div>
     )

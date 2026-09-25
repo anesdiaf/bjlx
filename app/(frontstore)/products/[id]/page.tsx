@@ -10,6 +10,11 @@ import Image from "next/image";
 import OrderForm from "./order-form";
 import { productValues } from "@/types";
 import { formatNumbers } from "@/lib/utils";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { db } from "@/src";
+import { userDataType, userInfo } from "@/src/db/schema";
+import { eq } from "drizzle-orm";
 
 
 
@@ -70,15 +75,6 @@ export default async function SingleProductPage({
     let currentValues: productValues = {};
 
     if (variants.length > 1) {
-
-        //variants.map(v => {
-        //    v.values.map(vv => {
-        //        if (!currentValues[vv.attribute_id!]) {
-        //            currentValues[vv.attribute_id!] = []
-        //        }
-        //        currentValues[vv.attribute_id!].push(vv)
-        //    })
-        //})
         variants.map(v => {
             const values = v.values[0].values;
             if (values) {
@@ -93,6 +89,23 @@ export default async function SingleProductPage({
     }
     // Variant Images
     const prodcutImages = currentVariant.images
+
+
+    const session= await auth.api.getSession({
+        headers: await headers()
+    })
+
+    const user = session?.user;
+    const currentUserInfo= await db.query.userInfo.findFirst({
+        where: {
+            user_id: user?.id
+        },
+        with: {
+            user: true
+        }
+    })
+
+
 
     return (
         <div className="space-y-6">
@@ -147,7 +160,7 @@ export default async function SingleProductPage({
                             <p>En stock - délai de livraison 2-5 jours ouvrables</p>
                         </div>
                     }
-                    <OrderForm attributes={attributes!} id={id} variant={Number(variant)} currentVariant={currentVariant} currentValues={currentValues} />
+                    <OrderForm userInfo={currentUserInfo}  attributes={attributes!} currentProduct={currentProduct} variant_id={Number(variant)} currentVariant={currentVariant} currentValues={currentValues} />
                 </div>
             </div>
             <div className="space-y-8">

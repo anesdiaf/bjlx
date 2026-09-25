@@ -7,11 +7,10 @@
 7. Required page (privacy, contact...)
 
 
-Stopped at product variants when there's more then 1 attribute like color and size then move to cart then shipping providers (set price per city and sometimes commune)
+Stopped at Shipping providers and zones editing zones and providers and consider giving zones titles and map coords
 
 
 The ideal image aspect should be a an aspect of a square 1:1
-The form should be image (blob), url (input), path/uuid (i should receive this after uploading the image), and order (no 1 should be the main image) and a thumbnail or two for dynamic product thumbnail
 
 
 Should visit atomic website to get an idea about checkout and quick orders because the standards of shopify
@@ -35,5 +34,13 @@ Temp Notes:
 
 Data I Need With Order/Order-Item
 
-Product ID
-Variant ID (With this i can handle all the other data since the attributes are linked to this)
+
+UI sections for order or quick order
+
+Info of customer
+
+shipping 
+
+Payment
+
+Calculations (sub-total, discount, qty, shipping fees, total)

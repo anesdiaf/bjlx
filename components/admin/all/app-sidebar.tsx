@@ -71,7 +71,7 @@ export function AppSidebar() {
                             <Box />
                             <span>Commandes</span>
                         </SidebarMenuButton>
-                        <SidebarMenuButton render={<Link href="/admin/products" />} >
+                        <SidebarMenuButton render={<Link href="/admin/shipping" />} >
                             <Truck />
                             <span>Livraison</span>
                         </SidebarMenuButton>

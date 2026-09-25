@@ -11,6 +11,7 @@ import { getFeaturedProducts } from "../actions/products";
 
 export default async function Home() {
 
+  
   const { data: featuredProducts } = await getFeaturedProducts()
 
 
@@ -19,8 +20,8 @@ export default async function Home() {
       <HomePageCarousel />
       <div className="w-full space-y-6">
         <h1 className="text-center text-3xl font-serif">L&apos;Art de Briller</h1>
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 items-center relative">
-          {featuredProducts && featuredProducts.map(p => {
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 align-baseline relative">
+          {(featuredProducts && featuredProducts.length !== 0) && featuredProducts.map(p => {
             const { title } = p;
             const { price, promo_price, on_promo, thumbnails } = p.variants[0];
             return (
@@ -29,7 +30,6 @@ export default async function Home() {
                   <Button className="  group" size="icon-sm" variant="ghost"><HeartIcon className="group-hover:fill-primary transition" /></Button>
                   {on_promo && <Badge className="bg-primary/50 text-white aspect-square">{(100 - ((Number(promo_price) * 100) / Number(price))).toFixed(1)}%</Badge>}
                 </div>
-
                 <ProductCardThumbnails thumbnails={thumbnails} />
                 <div className="space-y-3">
                   <h2>{title}</h2>

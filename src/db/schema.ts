@@ -215,6 +215,7 @@ export const shippingProvider = pgTable("shipping_provider", {
     commune_id: integer().references(() => commune.id),
     address: varchar({ length: 255 }),
     postal: varchar({ length: 5 }),
+    status: boolean(),
     createdAt: timestamp().defaultNow(),
     updatedAt: timestamp().$onUpdate(() => new Date())
 })
@@ -223,12 +224,13 @@ export const shippingZone = pgTable("shipping_zone", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     provider_id: integer().references(() => shippingProvider.id, { onDelete: "set null" }),
     type: varchar({ length: 64 }),
-    price: decimal().notNull(),
+    price: integer().notNull(),
     phone: varchar({ length: 10 }),
     wilaya_id: integer().references(() => wilaya.id),
     commune_id: integer().references(() => commune.id),
     address: varchar({ length: 255 }),
     postal: varchar({ length: 5 }),
+    status: boolean(),
     createdAt: timestamp().defaultNow(),
     updatedAt: timestamp().$onUpdate(() => new Date())
 }, (table) => [
@@ -237,6 +239,7 @@ export const shippingZone = pgTable("shipping_zone", {
     index("zone_commune_id_idx").on(table.commune_id),
 ])
 
+export type shippingZoneType = typeof shippingZone.$inferSelect;
 
 
 export const orderStatus = pgTable("order_status", {

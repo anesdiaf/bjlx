@@ -1,7 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import CartItems from "./cart-items";
 
-export default function CartPage() {
+export default function CheckoutPage() {
     return (
         <div className="space-y-6">
             <Breadcrumb>
@@ -11,11 +10,14 @@ export default function CartPage() {
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                        <BreadcrumbPage>Votre panier</BreadcrumbPage>
+                        <BreadcrumbLink href="/cart">Panier</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>Finaliser la commande</BreadcrumbPage>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
-            <CartItems/>
         </div>
     )
 }

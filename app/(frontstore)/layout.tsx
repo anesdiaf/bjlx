@@ -15,7 +15,7 @@ export default function FrontstoreLayout({ children }: LayoutProps<"/">) {
                     <div className="flex justify-center bg-accent text-primary h-12 items-center">
                         <AnnouncementBar />
                     </div>
-                    <div className="flex justify-between items-center max-w-6xl mx-auto py-5 lg:py-8 px-4 xl:px-0">
+                    <div className="flex justify-between items-center max-w-6xl mx-auto py-3 lg:py-4 px-4 xl:px-0">
                         <Link href="/" className="text-3xl font-serif">BJLX</Link>
                         <div className="flex items-center gap-4">
                             <Search strokeWidth={1.5} size={24} className="text-muted-foreground" />

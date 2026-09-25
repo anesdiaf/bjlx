@@ -256,7 +256,8 @@ export interface CartItemsType {
     remove: (id: number) => void,
     changeQty: (id: number, qty: number) => void
     open: () => void
-    close: () => void
+    close: () => void,
+    reset: () => void
 }
 
 

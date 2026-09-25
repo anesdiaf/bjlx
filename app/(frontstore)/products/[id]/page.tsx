@@ -15,6 +15,7 @@ import { headers } from "next/headers";
 import { db } from "@/src";
 import { userDataType, userInfo } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 
 
@@ -114,19 +115,37 @@ export default async function SingleProductPage({
     return (
         <div className="space-y-6">
             <div className="gap-6 flex flex-col md:flex-row md:items-end">
-                <Carousel className="w-full md:w-110 2xl:w-1/2">
-                    <CarouselContent>
-                        {prodcutImages.filter(i => i.variant_id === currentVariant!.id).map((i, index) => (
-                            <CarouselItem key={i.id}>
-                                <div className="w-full h-full overflow-hidden aspect-square">
-                                    <Image loading={index == 0 ? "eager" : "lazy"} src={`/api/uploads${i.url}`} width={600} height={600} alt={`Image ${i.id}`} className="w-full h-full object-cover" />
-                                </div>
-                            </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                </Carousel>
+                <div className="w-full md:w-110 2xl:w-1/2 flex flex-col gap-5">
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="/catalog">Catalog</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>{currentProduct.title}</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                    <Carousel className="w-full">
+                        <CarouselContent>
+                            {prodcutImages.filter(i => i.variant_id === currentVariant!.id).map((i, index) => (
+                                <CarouselItem key={i.id}>
+                                    <div className="w-full h-full overflow-hidden aspect-square">
+                                        <Image loading={index == 0 ? "eager" : "lazy"} src={`/api/uploads${i.url}`} width={600} height={600} alt={`Image ${i.id}`} className="w-full h-full object-cover" />
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <CarouselPrevious />
+                        <CarouselNext />
+                    </Carousel>
+                </div>
+
                 <div className="space-y-8 lg:space-y-12  flex-1">
                     <div className="space-y-12 lg:space-y-8">
                         <div>

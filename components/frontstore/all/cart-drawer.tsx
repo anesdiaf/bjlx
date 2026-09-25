@@ -112,7 +112,7 @@ export default function CartDrawer() {
                         <div className="flex flex-col items-center gap-4 w-full">
                             {items.map((item, index) => {
                                 return (
-                                    <div className="flex flex-col w-full">
+                                    <div key={item.id} className="flex flex-col w-full">
                                         <Link onClick={() => close()} href={`/products/${item.product_id}?variant=${item.id}`}>{item.title}</Link>
                                         <div key={item.id} className="border-b border-dashed w-full py-3 flex items-end gap-2">
                                             <div className="aspect-square size-18 md:size-32 border flex justify-center items-center">
@@ -135,7 +135,7 @@ export default function CartDrawer() {
                                                                 const attributeValue = currentAttribute?.values.find(v => v.id === item.values[0].values![attrID])?.value
 
                                                                 return (
-                                                                    <p className="text-xs">{index === 0 && " - "} {attributeTitle}:<span> {attributeValue}</span> {index !== Object.keys(item.values[0].values!).length - 1 && " - "}</p>
+                                                                    <p key={a} className="text-xs">{index === 0 && " - "} {attributeTitle}:<span> {attributeValue}</span> {index !== Object.keys(item.values[0].values!).length - 1 && " - "}</p>
                                                                 )
                                                             })}
                                                         </div>

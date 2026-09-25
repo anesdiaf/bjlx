@@ -7,7 +7,9 @@
 7. Required page (privacy, contact...)
 
 
-Stopped at Ordering zone by wilaya code
+Stopped at Ordering zone by wilaya code at Shipping admin and quick order and checkout
+
+✅ design cart page then ⏳checkout then move to order creation then editing orders and handling history and returns
 
 
 The ideal image aspect should be a an aspect of a square 1:1

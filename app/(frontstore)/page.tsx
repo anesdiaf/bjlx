@@ -16,7 +16,7 @@ export default async function Home() {
 
 
   return (
-    <div className="flex flex-col flex-1 items-center font-sans gap-y-12">
+    <div className="flex flex-col flex-1 items-center font-sans gap-6 lg:gap-y-12">
       <HomePageCarousel />
       <div className="w-full space-y-6">
         <h1 className="text-center text-3xl font-serif">L&apos;Art de Briller</h1>
@@ -76,7 +76,7 @@ export default async function Home() {
         </div>
       </div>
       <div className="space-y-4">
-        <h2 className="text-3xl font-serif">Contes de fées du quotidien</h2>
+        <h2 className="text-2xl md:text-3xl font-serif">Contes de fées du quotidien</h2>
         <p className="text-center text-muted-foreground">Suivez-nous sur Instagram <a href="https://www.instagram.com/bjlx_dz">@bjlx_dz</a></p>
       </div>
     </div>

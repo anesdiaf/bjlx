@@ -5,7 +5,7 @@ import { persist } from "zustand/middleware";
 export const createCartStore = () => {
     return create<CartItemsType>()(
         persist(
-            (set) => ({
+            (set, get, store) => ({
                 items: [],
                 isOpen: false,
                 add: (item) =>
@@ -27,7 +27,8 @@ export const createCartStore = () => {
                         ),
                     })),
                 open: () => set(state => ({ ...state, isOpen: true })),
-                close: () => set(state => ({ ...state, isOpen: false }))
+                close: () => set(state => ({ ...state, isOpen: false })),
+                reset: () => set(store.getInitialState())
             }),
             {
                 name: "cart-storage",

@@ -3,7 +3,7 @@ import CartItems from "./cart-items";
 
 export default function CartPage() {
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 h-full flex-1 flex flex-col">
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>

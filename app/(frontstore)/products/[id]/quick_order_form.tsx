@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { cn, formatNumbers } from "@/lib/utils";
 import { communeType, shippingZoneType, wilayaType } from "@/src/db/schema";
-import { PorductWithDetailsType, quickOrderFormScema, userWithDataType, VariantWithValuesImagesType } from "@/types";
+import { PorductWithDetailsType, OrderFormScema, userWithDataType, VariantWithValuesImagesType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, CheckCircle2Icon, XIcon } from "lucide-react";
 import Link from "next/link";
@@ -35,8 +35,8 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
 
 
 
-    const form = useForm<z.infer<typeof quickOrderFormScema>>({
-        resolver: zodResolver(quickOrderFormScema),
+    const form = useForm<z.infer<typeof OrderFormScema>>({
+        resolver: zodResolver(OrderFormScema),
         defaultValues: {
             name: userInfo?.user?.name ?? "",
             phone: userInfo?.phone ?? "",
@@ -46,16 +46,15 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
             postal: userInfo?.postal ?? "",
             note: "",
             zone_id: undefined,
+            user_id: userInfo?.user_id ?? undefined,
             guest_order: userInfo ? false : true
         },
     })
 
-    async function onSubmit(data: z.infer<typeof quickOrderFormScema>) {
+    async function onSubmit(data: z.infer<typeof OrderFormScema>) {
         // Do something with the form values.
 
-        console.log(data);
-
-        const response = await createQuickOrder()
+        const response = await createQuickOrder(data)
 
 
         if (response.success) {
@@ -67,7 +66,7 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                 type: "success"
             })
 
-           //setOpen(false)
+            //setOpen(false)
 
         } else {
             toast.add({
@@ -362,7 +361,7 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                     </div>
                         <div className={cn("w-full border border-dashed px-2 origin-top transition", zone_id ? "scale-y-100 h-fit" : "scale-y-0 h-0")}>
                             <div className="w-full flex justify-between border-b border-dashed py-3">
-                                <p>Article: </p>
+                                <p>Article </p>
                                 <p>{currentProduct.title}</p>
                             </div>
                             <div className="w-full flex justify-between border-b border-dashed py-3">
@@ -372,21 +371,21 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                             {currentVariant.on_promo && (
                                 <>
                                     <div className="w-full flex justify-between border-b border-dashed py-3">
-                                        <p>Remise: </p>
+                                        <p>Remise </p>
                                         <p>{formatNumbers((Number(currentVariant.price) - Number(currentVariant.promo_price)), "DZ-dz")} D.A</p>
                                     </div>
                                     <div className="w-full flex justify-between border-b border-dashed py-3">
-                                        <p>Prix promo: </p>
+                                        <p>Prix promo </p>
                                         <p>{formatNumbers(currentVariant.promo_price!, "DZ-dz")} D.A</p>
                                     </div>
                                 </>
                             )}
                             <div className="w-full flex justify-between border-b border-dashed py-3">
-                                <p>Frais de livraison: </p>
+                                <p>Frais de livraison </p>
                                 <p>{formatNumbers(zones.find(z => z.id == zone_id)?.price, "DZ-dz")} D.A</p>
                             </div>
                             <div className="w-full flex justify-between py-3">
-                                <p>Total: </p>
+                                <p>Total </p>
                                 <p>{formatNumbers(Number(zones.find(z => z.id == zone_id)?.price) + (currentVariant.on_promo ? Number(currentVariant.promo_price) : Number(currentVariant.price)), "us")} D.A</p>
                             </div>
                         </div></>}
@@ -401,7 +400,7 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                                 <span className="text-muted-foreground">Nous vous contacterons prochainement pour la confirmer et préparer son expédition.</span>
                             </div>
                             <Link className="text-primary font-medium w-full" href="/track-order"><Button variant="secondary" className="w-full">Suivre la commande</Button></Link>
-                            <Button onClick={() => { setOpen(false); setStep(1)}} className="w-full">Fermer</Button>
+                            <Button onClick={() => { setOpen(false); setStep(1) }} className="w-full">Fermer</Button>
                         </div>
                     }
 

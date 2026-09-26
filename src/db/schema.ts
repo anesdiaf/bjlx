@@ -245,7 +245,8 @@ export type shippingZoneType = typeof shippingZone.$inferSelect;
 export const orderStatus = pgTable("order_status", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     title: varchar({ length: 255 }),
-    order: integer()
+    order: integer(),
+    default: boolean()
 })
 
 export const order = pgTable("order", {
@@ -276,6 +277,7 @@ export const orderItem = pgTable("order_item", {
     variant_id: integer().references(() => productVariant.id),
     promo: boolean(),
     qty: integer(),
+    buy_price: decimal(),
     price: decimal(),
     total: decimal(),
 }, (table) => [
@@ -286,7 +288,7 @@ export const orderItem = pgTable("order_item", {
 ])
 
 
-export const guestOrderInfo = pgTable("guest_order_info", {
+export const OrderInfo = pgTable("order_info", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     order_id: integer().references(() => order.id),
     name: varchar({ length: 255 }),

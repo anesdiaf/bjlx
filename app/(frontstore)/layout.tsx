@@ -2,7 +2,7 @@ import AnnouncementBar from "@/components/frontstore/all/announcement-bar";
 import CartDrawer from "@/components/frontstore/all/cart-drawer";
 import UserLink from "@/components/frontstore/all/user-link";
 import { CartStoreProvider } from "@/src/context/cart-store-provider";
-import { Search, ShoppingBag, User } from "lucide-react";
+import { Search, User } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 

@@ -7,6 +7,7 @@ export const createCartStore = () => {
         persist(
             (set, get, store) => ({
                 items: [],
+                itemsLoaded: false,
                 isOpen: false,
                 add: (item) =>
                     set((state) => ({
@@ -26,8 +27,8 @@ export const createCartStore = () => {
                                 : item
                         ),
                     })),
-                open: () => set(state => ({ ...state, isOpen: true })),
-                close: () => set(state => ({ ...state, isOpen: false })),
+                open: () => set({ isOpen: true }),
+                close: () => set({ isOpen: false }),
                 reset: () => set(store.getInitialState())
             }),
             {

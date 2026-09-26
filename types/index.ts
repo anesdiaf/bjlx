@@ -251,6 +251,7 @@ export interface CartProductVariantType {
 export type SingleCartItemType =  {title: string, qty: number} & VariantWithValuesImagesType;
 export interface CartItemsType {
     items: SingleCartItemType[]
+    itemsLoaded: boolean,
     isOpen: boolean
     add: (item: SingleCartItemType) => void,
     remove: (id: number) => void,
@@ -284,7 +285,7 @@ export const shippingZoneFromSchema = z.object({
     provider_id: z.number()
 })
 
-export const quickOrderFormScema = z.object({
+export const OrderFormScema = z.object({
     name: z.string().min(2).max(32),
     phone: z.string().length(10),
     wilaya_id: z.number(),
@@ -293,6 +294,7 @@ export const quickOrderFormScema = z.object({
     postal: z.string().max(5),
     note: z.string(),
     zone_id: z.number().optional(),
+    user_id: z.string().optional(),
     guest_order: z.boolean()
 })
 

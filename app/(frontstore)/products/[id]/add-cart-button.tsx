@@ -15,7 +15,8 @@ export default function AddItemToCartButton({ title, variant }: { title: string,
 
         if (itemExists) {
             // Increase qty
-            changeQty(itemExists.id, itemExists.qty + 1)
+            
+           (itemExists.track_stock && (itemExists.qty < itemExists.stock!)) && changeQty(itemExists.id, itemExists.qty + 1)
         } else {
             // Add item
             let cartItem: SingleCartItemType = { title, qty: 1, ...variant }

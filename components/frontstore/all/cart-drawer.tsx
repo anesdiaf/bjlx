@@ -20,12 +20,11 @@ import { useEffect, useState } from "react"
 import {
     Popover,
     PopoverContent,
-    PopoverDescription,
     PopoverHeader,
     PopoverTitle,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { attributeValuesType, attributeWithValuesType } from "@/src/db/schema"
+import { attributeWithValuesType } from "@/src/db/schema"
 import { getAttributes } from "@/app/actions/attributes"
 
 
@@ -33,7 +32,9 @@ import { getAttributes } from "@/app/actions/attributes"
 
 export default function CartDrawer() {
 
-    const { items, isOpen, open, close, changeQty, remove } = useCartStore((state) => state)
+    const {items, isOpen, open, close, changeQty, remove } = useCartStore((state) => state)
+
+
 
     const [subtotal, setSubtotal] = useState<number>(0)
     const [discount, setDiscount] = useState<number>(0)
@@ -102,8 +103,8 @@ export default function CartDrawer() {
                         <div className="flex flex-col items-center my-12 space-y-6">
                             <ShoppingCart size={128} className="text-primary" />
                             <div className="text-center">
-                                <h1 className="text-lg font-medium text-muted-foreground">Votre panier est encore vide</h1>
-                                <p className="text-muted-foreground text-sm text-justify">Découvrez nos bijoux et laissez-vous séduire par votre prochain coup de cœur. ✨</p>
+                                <h1 className="font-medium text-muted-foreground mb-3">Votre panier est encore vide</h1>
+                                <p className="text-muted-foreground text-justify md:w-2/3 mx-auto text-xs">Découvrez nos bijoux et laissez-vous séduire par votre prochain coup de cœur. ✨</p>
                             </div>
 
                         </div>
@@ -195,7 +196,7 @@ export default function CartDrawer() {
                         </div>
                     </div>
                     <Link onClick={() => close()} href="/cart" className="w-full"><Button className="w-full">Voir le panier</Button></Link>
-                    <DrawerClose onClick={() => close} render={<Button variant="outline" />}>Poursuivre vos achats</DrawerClose>
+                    <DrawerClose onClick={() => close()} render={<Button variant="outline" />}>Poursuivre vos achats</DrawerClose>
                 </DrawerFooter>
             </DrawerContent>
         </Drawer>

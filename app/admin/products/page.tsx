@@ -7,7 +7,14 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { db } from "@/src";
 import { product } from "@/src/db/schema";
 import { Pen, PlusIcon } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
+
+
+export const metadata: Metadata = {
+    title: "Produits"
+}
+
 
 export default async function ProductsAdminPage() {
 

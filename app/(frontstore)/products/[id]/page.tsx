@@ -170,16 +170,17 @@ export default async function SingleProductPage({
                     {currentVariant.track_stock ?
                         currentVariant.stock! > 0 ?
                             <div className="flex items-center gap-2 text-xs text-green-600">
-                                <CheckCircle />
+                                <CheckCircle size={20}/>
                                 <p>En stock - délai de livraison 2-5 jours ouvrables</p>
                             </div>
                             :
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <XCircle />
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <XCircle size={20}/>
                                 <p>Rupture de stock — Contactez-nous pour plus d&apos;informations</p>
                             </div>
                         :
-                        <div className="flex items-center gap-2 text-sm text-green-600">
+                        <div className="flex items-center gap-2 text-xs text-green-600">
+                            <CheckCircle size={20}/>
                             <p>En stock - délai de livraison 2-5 jours ouvrables</p>
                         </div>
                     }

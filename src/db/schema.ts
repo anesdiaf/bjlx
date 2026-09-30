@@ -1,4 +1,4 @@
-import { boolean, decimal, integer, jsonb, text, timestamp, varchar } from "drizzle-orm/pg-core/columns";
+import { boolean, integer, jsonb, text, timestamp, varchar } from "drizzle-orm/pg-core/columns";
 import { pgTable } from "drizzle-orm/pg-core/table";
 import { user } from "./auth-schema";
 import { index, uniqueIndex } from "drizzle-orm/pg-core";
@@ -150,11 +150,11 @@ export const productVariant = pgTable("product_variant", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     product_id: integer().references(() => product.id, { onDelete: "cascade" }),
     sku: varchar({ length: 255 }).notNull(),
-    stock: integer().default(0),
+    stock: integer().default(0).notNull(),
     track_stock: boolean().default(false),
-    price: decimal().notNull(),
-    buy_price: decimal().notNull(),
-    promo_price: decimal(),
+    price: integer().default(0).notNull(),
+    buy_price: integer().default(0).notNull(),
+    promo_price: integer().default(0),
     on_promo: boolean().default(false),
     status: boolean().default(true),
     default: boolean(),
@@ -246,8 +246,12 @@ export const orderStatus = pgTable("order_status", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     title: varchar({ length: 255 }),
     order: integer(),
+    icon: varchar({length: 64}),
+    color: varchar({length: 64}),
     default: boolean()
 })
+
+export type orderStatusType = typeof orderStatus.$inferSelect;
 
 export const order = pgTable("order", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -255,10 +259,10 @@ export const order = pgTable("order", {
     user_id: text().references(() => user.id),
     status_id: integer().references(() => orderStatus.id),
     zone_id: integer().references(() => shippingZone.id),
-    subtotal: decimal(),
-    discount: decimal(),
-    shipping_cost: decimal(),
-    total: decimal(),
+    subtotal: integer(),
+    discount: integer(),
+    shipping_cost: integer(),
+    total: integer(),
     note: text(),
     guest: boolean().default(true),
     createdAt: timestamp().defaultNow(),
@@ -272,14 +276,14 @@ export const order = pgTable("order", {
 
 export const orderItem = pgTable("order_item", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    order_id: integer().references(() => order.id),
+    order_id: integer().references(() => order.id, {onDelete: "cascade"}),
     product_id: integer().references(() => product.id),
     variant_id: integer().references(() => productVariant.id),
     promo: boolean(),
     qty: integer(),
-    buy_price: decimal(),
-    price: decimal(),
-    total: decimal(),
+    buy_price: integer(),
+    price: integer(),
+    total: integer(),
 }, (table) => [
     index("order_item_order_id_idx").on(table.order_id),
     index("order_item_product_id_idx").on(table.product_id),
@@ -290,7 +294,7 @@ export const orderItem = pgTable("order_item", {
 
 export const OrderInfo = pgTable("order_info", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    order_id: integer().references(() => order.id),
+    order_id: integer().references(() => order.id, {onDelete: "cascade"}),
     name: varchar({ length: 255 }),
     phone: varchar({ length: 10 }),
     wilaya_id: integer().references(() => wilaya.id),
@@ -301,7 +305,7 @@ export const OrderInfo = pgTable("order_info", {
 
 export const orderHistory = pgTable("order_history", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    order_id: integer().references(() => order.id),
+    order_id: integer().references(() => order.id, {onDelete: "cascade"}),
     status_id: integer().references(() => orderStatus.id),
     note: text(),
     createdAt: timestamp().defaultNow(),

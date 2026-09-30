@@ -43,6 +43,38 @@ export const getWilayaCommunes = async (id: number): Promise<ActionResult> => {
 }
 
 
+export const getCommuneWithWilaya = async (id: number): Promise<ActionResult> => {
+
+
+    try {
+
+        const commune = await db.query.commune.findFirst({
+            where: {
+                id
+            },
+            columns: {
+                name: true
+            },
+            with: {
+                wilaya: {
+                    columns: {
+                        name: true
+                    }
+                }
+            }
+        })
+
+        return { success: true, data: commune }
+    } catch (err) {
+        if (err instanceof Error) {
+            console.log(err);
+        }
+
+        return { success: false, error: "Erreur lors de la récupération des communes de la wilaya" }
+    }
+}
+
+
 export const createProvider = async (data: z.infer<typeof providerFromSchema>): Promise<ActionResult> => {
     try {
 

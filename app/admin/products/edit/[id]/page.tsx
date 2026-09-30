@@ -104,7 +104,7 @@ export default async function EditProductAdminPage({
                                             <TableCell className="text-right space-x-2 flex justify-center items-center">
                                                 <SetAttributesForm variantValues={variantValues.find(va => va.variant_id === v.id)} attributes={attributes} id={v.id} productId={id} />
                                                 <ProductImagesForm id={v.id} productId={id} prodcutImages={prodcutImages} productThumbnails={prodcutThumbnails}/>
-                                                <EditVariantForm id={v.id}/>
+                                                <EditVariantForm variant_id={v.id} product_id={id}/>
                                                 <DeleteVariantButton id={v.id} productId={id} />
                                             </TableCell>
                                         </TableRow>

@@ -17,6 +17,13 @@ import { category } from "@/src/db/schema";
 import { Badge } from "@/components/ui/badge";
 import { asc } from "drizzle-orm";
 import DeleteCategoryButton from "@/components/admin/categories/delete-category-button";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+    title: "Catégories"
+}
+
 
 export default async function CategoriesAdminPage() {
 

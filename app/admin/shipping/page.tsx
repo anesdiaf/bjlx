@@ -7,11 +7,14 @@ import ProviderForm from "@/app/admin/shipping/provider-form";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import DeleteProviderButton from "@/app/admin/shipping/delete-provider-button";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Livraison"
+}
+
 
 export default async function ShippingAdminPage() {
-
-
-
     const providers = await db.select().from(shippingProvider)
 
     return (

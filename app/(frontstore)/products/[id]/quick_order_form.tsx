@@ -54,7 +54,7 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
     async function onSubmit(data: z.infer<typeof OrderFormScema>) {
         // Do something with the form values.
 
-        const response = await createQuickOrder(data)
+        const response = await createQuickOrder(data, currentVariant)
 
 
         if (response.success) {

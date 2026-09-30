@@ -15,6 +15,12 @@ import Link from "next/link";
 import { db } from "@/src";
 import { attribute } from "@/src/db/schema";
 import DeleteAttributeButton from "@/components/admin/attributes/delete-attribute-button";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+    title: "Attributes"
+}
 
 export default async function AttributesAdminPage(){
 

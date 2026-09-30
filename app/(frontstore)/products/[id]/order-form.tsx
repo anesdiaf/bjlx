@@ -70,10 +70,13 @@ export default function OrderForm({ attributes, currentProduct, currentVariant, 
                     )
                 })}
             </div>
-            <div className="space-y-4">
-                <AddItemToCartButton title={currentProduct.title} variant={currentVariant}/>
-                <QuickOrderForm userInfo={userInfo} currentProduct={currentProduct} currentVariant={currentVariant}/>
-            </div>
+            {(!currentVariant.track_stock || (currentVariant.track_stock && currentVariant.stock! >= 1)) &&
+                <div className="space-y-4">
+                    <AddItemToCartButton title={currentProduct.title} variant={currentVariant} />
+                    <QuickOrderForm userInfo={userInfo} currentProduct={currentProduct} currentVariant={currentVariant} />
+                </div>
+            }
+
         </div>
     )
 }

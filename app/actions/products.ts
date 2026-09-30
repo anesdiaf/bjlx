@@ -3,10 +3,11 @@
 import { db } from "@/src";
 import { product, productInsertType, productVariant, productVariantValues, producVariantInsertType, producVariantType, variantImage, variantThumbnail } from "@/src/db/schema";
 import { disk } from "@/src/fs";
-import { ActionResult, VariantValues } from "@/types";
+import { ActionResult, variantDataFormSchema, VariantValues } from "@/types";
 import { and, eq, like, SQL, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import * as z from "zod";
 
 
 
@@ -68,7 +69,7 @@ export const getProduct = async (id: number) => {
 export const getProductVariant = async (product_id: number, values: VariantValues) => {
 
     let isSuccess = false;
-    let id:number;
+    let id: number;
     try {
 
         const variant = await db.select().from(productVariantValues).where(sql`${JSON.stringify(values)}::jsonb @> ${productVariantValues.values}`)
@@ -237,33 +238,16 @@ export const getVariant = async (id: number): Promise<producVariantType | undefi
 
 }
 
-export const createVariant = async (formData: FormData, productId: number): Promise<ActionResult> => {
+export const createVariant = async (data: z.infer<typeof variantDataFormSchema>): Promise<ActionResult> => {
 
     try {
 
-        const variantObject: { [k: string]: any } = Object.fromEntries(formData);
-        variantObject.track_stock = variantObject.track_stock === "on" ? true : false
-        variantObject.on_promo = variantObject.on_promo === "on" ? true : false
-        variantObject.default = variantObject.default === "on" ? true : false
-        variantObject.status = variantObject.status === "on" ? true : false
-        variantObject.price = Number(variantObject.price)
-        variantObject.buy_price = Number(variantObject.buy_price)
-        variantObject.promo_price = Number(variantObject.promo_price)
-        variantObject.stock = Number(variantObject.stock)
-
-        // remove actionID
-        const actionIdKey = Object.keys(variantObject).find(k => k.startsWith('$ACTION_ID'))
-        actionIdKey && delete variantObject[actionIdKey]
-
-
-        // set productId
-        variantObject.product_id = productId
 
 
         // handle sql query
-        await db.insert(productVariant).values(variantObject as producVariantInsertType)
+        await db.insert(productVariant).values(data as producVariantInsertType)
 
-        revalidatePath(`/admin/products/edit/${productId}`)
+        revalidatePath(`/admin/products/edit/${data.product_id}`)
 
         return { success: true }
     } catch (err) {
@@ -275,33 +259,13 @@ export const createVariant = async (formData: FormData, productId: number): Prom
     }
 }
 
-export const editVariant = async (formData: FormData, productId: number, variantId: number): Promise<ActionResult> => {
+export const editVariant = async (data: z.infer<typeof variantDataFormSchema>, variantId: number): Promise<ActionResult> => {
 
     try {
-
-        const variantObject: { [k: string]: any } = Object.fromEntries(formData);
-        variantObject.track_stock = variantObject.track_stock === "on" ? true : false
-        variantObject.on_promo = variantObject.on_promo === "on" ? true : false
-        variantObject.default = variantObject.default === "on" ? true : false
-        variantObject.status = variantObject.status === "on" ? true : false
-        variantObject.price = Number(variantObject.price)
-        variantObject.buy_price = Number(variantObject.buy_price)
-        variantObject.promo_price = Number(variantObject.promo_price)
-        variantObject.stock = Number(variantObject.stock)
-
-        // remove actionID
-        const actionIdKey = Object.keys(variantObject).find(k => k.startsWith('$ACTION_ID'))
-        actionIdKey && delete variantObject[actionIdKey]
-
-
-        // set productId
-        variantObject.product_id = productId
-
-
         // handle sql query
-        await db.update(productVariant).set(variantObject).where(eq(productVariant.id, variantId))
+        await db.update(productVariant).set(data).where(eq(productVariant.id, variantId))
 
-        revalidatePath(`/admin/products/edit/${productId}`)
+        revalidatePath(`/admin/products/edit/${data.product_id}`)
 
         return { success: true }
     } catch (err) {

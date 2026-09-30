@@ -7,8 +7,15 @@
 7. Required page (privacy, contact...)
 
 
-Stopped at creating the delete and edit dialogs for order statuses & creating orders
+Stopped at creating cart orders server actions and testing
 & Ordering zone by wilaya code at Shipping admin and quick order and checkout
+
+
+Important: 
+1. Should add payment status to orders to check if shipping provider has delivered my money
+    1.2. Should add a type to order status to check with it, types are (preparation, delivered, return, refund)
+2. Should a constraint in the variant forms (add & edit) to check if promo is true price should be defined
+
 
 
 ✅ design cart page then ✅checkout then move to ⏳order creation then editing orders and handling history and returns

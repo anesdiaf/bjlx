@@ -77,9 +77,9 @@ export interface PorductWithDetailsType {
         product_id: number | null;
         stock: number | null;
         track_stock: boolean | null;
-        price: string;
-        buy_price: string;
-        promo_price: string | null;
+        price: number | null;
+        buy_price: number | null;
+        promo_price: number | null;
         on_promo: boolean | null;
         values: {
             variant_id: number | null;
@@ -123,19 +123,17 @@ export interface VariantWithValuesImagesType {
     default: boolean | null;
     product_id: number | null;
     sku: string;
-    stock: number | null;
+    stock: number;
     track_stock: boolean | null;
-    price: string;
-    buy_price: string;
-    promo_price: string | null;
+    price: number;
+    buy_price: number;
+    promo_price: number;
     on_promo: boolean | null;
     values: {
         id: number;
         product_id: number | null;
         variant_id: number | null;
-        values: {
-            [key: number]: number;
-        } | null;
+        values: VariantValues | null;
     }[];
     images: {
         id: number;
@@ -145,7 +143,6 @@ export interface VariantWithValuesImagesType {
         url: string;
     }[];
 }
-
 
 
 
@@ -246,9 +243,9 @@ export interface CartProductVariantType {
     }[];
 }
 
-// Orders
+
 // Cart
-export type SingleCartItemType =  {title: string, qty: number} & VariantWithValuesImagesType;
+export type SingleCartItemType = { title: string, qty: number } & VariantWithValuesImagesType;
 export interface CartItemsType {
     items: SingleCartItemType[]
     itemsLoaded: boolean,
@@ -260,6 +257,34 @@ export interface CartItemsType {
     close: () => void,
     reset: () => void
 }
+// Orders
+export interface OrderWithInfoType {
+    id: number;
+    createdAt: Date | null;
+    updatedAt: Date | null;
+    note: string | null;
+    zone_id: number | null;
+    user_id: string | null;
+    order_number: string | null;
+    status_id: number | null;
+    subtotal: number | null;
+    discount: number | null;
+    shipping_cost: number | null;
+    total: number | null;
+    guest: boolean | null;
+    info: {
+        id: number;
+        address: string | null;
+        name: string | null;
+        wilaya_id: number | null;
+        phone: string | null;
+        commune_id: number | null;
+        postal: string | null;
+        order_id: number | null;
+    } | null;
+}
+
+
 
 
 // Form schemas
@@ -299,3 +324,21 @@ export const OrderFormScema = z.object({
 })
 
 
+export const variantDataFormSchema = z.object({
+    sku: z.string(),
+    stock: z.number().optional(),
+    track_stock: z.boolean(),
+    price: z.number(),
+    buy_price: z.number(),
+    promo_price: z.number().optional(),
+    on_promo: z.boolean(),
+    default: z.boolean(),
+    status: z.boolean(),
+    product_id: z.number()
+})
+
+export const orderUpdateSchema = z.object({
+    order_id: z.number(),
+    status_id: z.number(),
+    note: z.string().optional()
+})

@@ -11,19 +11,19 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/toast";
-import { deleteProduct, deleteVariant } from "@/app/actions/products";
-import { TrashIcon } from "lucide-react";
+import { deleteOrderStatus } from "@/app/actions/orders";
+import { Trash2Icon } from "lucide-react";
 
-export default function DeleteVariantButton({ id, productId }: { id: number, productId: number }) {
+export default function DeleteOrderStatusButton({ id }: { id: number }) {
 
     const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const response = await deleteVariant(id, productId);
+        const response = await deleteOrderStatus(id);
 
         if (response.success) {
             toast.add({
-                title: "Produit supprimé avec succès",
+                title: "Statut de la commande supprimé avec succès",
                 type: "success"
             })
 
@@ -38,7 +38,8 @@ export default function DeleteVariantButton({ id, productId }: { id: number, pro
 
     return (
         <Dialog>
-            <DialogTrigger render={<Button type="submit" size="icon-sm"><TrashIcon /></Button>} />
+            <DialogTrigger render={<Button size="icon-sm" variant="destructive"><Trash2Icon/></Button>} />
+            
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>En êtes-vous absolument sûr ?</DialogTitle>
@@ -49,5 +50,6 @@ export default function DeleteVariantButton({ id, productId }: { id: number, pro
                 </form>
             </DialogContent>
         </Dialog>
+
     )
 }

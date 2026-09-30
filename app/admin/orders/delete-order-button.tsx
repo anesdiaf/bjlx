@@ -11,22 +11,27 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/toast";
-import { deleteProduct, deleteVariant } from "@/app/actions/products";
-import { TrashIcon } from "lucide-react";
+import { Trash } from "lucide-react";
+import { deleteOrder } from "@/app/actions/orders";
+import { useRouter } from "next/navigation";
 
-export default function DeleteVariantButton({ id, productId }: { id: number, productId: number }) {
+export default function DeleteOrderButton({ id }: { id: number }) {
+
+
+    const router = useRouter()
 
     const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const response = await deleteVariant(id, productId);
+        const response = await deleteOrder(id);
 
         if (response.success) {
             toast.add({
-                title: "Produit supprimé avec succès",
+                title: "Commande supprimée avec succès",
                 type: "success"
             })
 
+            router.push('/admin/orders')
         } else {
             toast.add({
                 title: response.error,
@@ -38,7 +43,7 @@ export default function DeleteVariantButton({ id, productId }: { id: number, pro
 
     return (
         <Dialog>
-            <DialogTrigger render={<Button type="submit" size="icon-sm"><TrashIcon /></Button>} />
+            <DialogTrigger render={<Button type="submit" size="icon" variant="destructive"><Trash/></Button>} />  
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>En êtes-vous absolument sûr ?</DialogTitle>
@@ -49,5 +54,6 @@ export default function DeleteVariantButton({ id, productId }: { id: number, pro
                 </form>
             </DialogContent>
         </Dialog>
+
     )
 }

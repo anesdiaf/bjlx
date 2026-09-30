@@ -13,17 +13,25 @@ import {
 import { Button } from "@/components/ui/button";
 import { insertWilayas } from "@/app/actions/wilayas";
 import { insertCommunes } from "@/app/actions/communes";
-import { count } from "drizzle-orm";
+import { asc, count } from "drizzle-orm";
 import { Badge, CheckIcon, Pen, Trash2Icon } from "lucide-react";
 import OrderStatusForm from "@/components/admin/settings/order-status-form";
+import EditOrderStatusForm from "@/components/admin/settings/edit-order-status-form";
+import DeleteOrderStatusButton from "@/components/admin/settings/delete-order-status-button";
+import DynamicIcon from "@/components/admin/all/dynamic-icon";
+import { Metadata } from "next";
 
 
+
+export const metadata: Metadata = {
+    title: "Paramètres"
+}
 
 export default async function SettingsAdminPage() {
     const wilayas = await db.select({ count: count() }).from(wilaya)
     const communes = await db.select({ count: count() }).from(commune)
 
-    const orderStatuses = await db.select().from(orderStatus)
+    const orderStatuses = await db.select().from(orderStatus).orderBy(asc(orderStatus.order))
 
     if (!wilayas || !communes) {
         return <div>...</div>
@@ -36,7 +44,7 @@ export default async function SettingsAdminPage() {
                 <Card>
                     <CardHeader className="flex items-center justify-between">
                         <CardTitle>Statuts de commande</CardTitle>
-                        <OrderStatusForm/>
+                        <OrderStatusForm />
                     </CardHeader>
                     <CardContent>
                         <Table>
@@ -44,6 +52,7 @@ export default async function SettingsAdminPage() {
                                 <TableRow>
                                     <TableHead>ID</TableHead>
                                     <TableHead>Titre</TableHead>
+                                    <TableHead>Icon</TableHead>
                                     <TableHead className="text-center w-30">Order</TableHead>
                                     <TableHead className="text-center w-30">Default</TableHead>
                                     <TableHead>Actions</TableHead>
@@ -53,12 +62,21 @@ export default async function SettingsAdminPage() {
                                 {orderStatuses.map((o, index) => (
                                     <TableRow key={o.id}>
                                         <TableCell>{index + 1}</TableCell>
-                                        <TableCell>{o.title}</TableCell>
+                                        <TableCell>
+                                            <p className="text-center px-2 py-1"
+                                                style={{ 
+                                                    backgroundColor: o.color ? o.color.replace(')', ' / 20%)') : "oklch(55.1% 0.027 264.364 / 10%)",
+                                                    color: o.color ? o.color : "oklch(55.1% 0.027 264.364)"
+                                                 }}>
+                                                {o.title}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell className="text-center"><DynamicIcon name={o.icon??undefined}/></TableCell>
                                         <TableCell className="text-center">{o.order}</TableCell>
-                                        <TableCell className="text-center">{o.default && <CheckIcon size={18}/>}</TableCell>
+                                        <TableCell className="text-center flex justify-center items-center pt-5">{o.default && <CheckIcon className="text-center" size={18} />}</TableCell>
                                         <TableCell className="space-x-4">
-                                            <Button size="icon-sm"><Pen/></Button>
-                                            <Button size="icon-sm" variant="destructive"><Trash2Icon/></Button>
+                                            <EditOrderStatusForm orderStatus={o} />
+                                            <DeleteOrderStatusButton id={o.id} />
                                         </TableCell>
                                     </TableRow>
                                 ))}

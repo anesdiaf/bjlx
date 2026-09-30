@@ -1,7 +1,7 @@
 "use client"
 
 import { getAttributes } from "@/app/actions/attributes"
-import { createQuickOrder } from "@/app/actions/orders"
+import { createOrder, createQuickOrder } from "@/app/actions/orders"
 import { getShippingZonesByWilaya, getWilayaCommunes, getWilayas } from "@/app/actions/shipping"
 import { Button } from "@/components/ui/button"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
@@ -69,7 +69,7 @@ export default function CheckoutForm({ userInfo }: { userInfo?: userWithDataType
 
         console.log(data);
 
-        const response = await createQuickOrder(data)
+        const response = await createOrder(data, items)
 
 
         if (response.success) {
@@ -158,26 +158,25 @@ export default function CheckoutForm({ userInfo }: { userInfo?: userWithDataType
         let currDiscount = 0;
         let currTotal = 0;
 
-        items.forEach((currValue) => {
-            const price = Number(currValue.price);
-            const currQty = currValue.qty;
+        items.forEach((item) => {
+            const price = Number(item.price);
+            const currQty = item.qty;
 
             currSubtotal += price * currQty;
 
-            currDiscount += currValue.on_promo
-                ? (price - Number(currValue.promo_price!)) * currQty
+            currDiscount += item.on_promo
+                ? (price - Number(item.promo_price)) * currQty
                 : 0;
 
-            currTotal += currValue.on_promo
-                ? Number(currValue.promo_price!) * currQty
+            currTotal += item.on_promo
+                ? Number(item.promo_price) * currQty
                 : price * currQty;
 
         });
-
+        currTotal += zone_id ? zones.find(z => z.id === zone_id)?.price! : 0
         setSubtotal(currSubtotal)
         setDiscount(currDiscount)
         setTotal(currTotal)
-
 
         if (variantAttributes.length === 0) {
             getAttributes()
@@ -188,7 +187,7 @@ export default function CheckoutForm({ userInfo }: { userInfo?: userWithDataType
                 })
         }
 
-    }, [items])
+    }, [items, zone_id])
 
     useEffect(() => {
         if (wilaya) {
@@ -524,7 +523,7 @@ export default function CheckoutForm({ userInfo }: { userInfo?: userWithDataType
                                         <p>Aucune expédition vers cette destination pour le moment.</p>
                                     }
                                     <div>
-                                        <h2 className="text-xs font-semibold tracking-wide uppercase pb-2 md:pb-4 border-b border-dashed">Résume</h2>
+                                        <h2 className="text-xs font-semibold tracking-wide uppercase pb-2 md:pb-4 border-b border-dashed">Résumé</h2>
                                         <div className="space-y-4 pt-4">
                                             <div className="w-full border border-dashed px-2">
                                                 <div className="w-full flex justify-between items-center py-2 border-b border-dashed">

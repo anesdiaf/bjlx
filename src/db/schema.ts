@@ -154,7 +154,7 @@ export const productVariant = pgTable("product_variant", {
     track_stock: boolean().default(false),
     price: integer().default(0).notNull(),
     buy_price: integer().default(0).notNull(),
-    promo_price: integer().default(0),
+    promo_price: integer().default(0).notNull(),
     on_promo: boolean().default(false),
     status: boolean().default(true),
     default: boolean(),

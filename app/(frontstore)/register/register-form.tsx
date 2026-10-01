@@ -58,10 +58,11 @@ export default function RegisterForm() {
             return;
         }
 
-        const { data: response, error } = await authClient.signUp.email({
+        const { data: response, error } = await authClient.admin.createUser({
             name, // required, The name of the user.
             email, // required, The email address of the user.
             password, // required, The password of the user. It should be at least 8 characters long and max 128 by default.
+            role: "user"
         });
 
         if (error) {

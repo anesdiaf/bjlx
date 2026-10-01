@@ -24,7 +24,11 @@ export default async function EditProductAdminPage({
             id
         },
         with: {
-            zones: true
+            zones: {
+                with: {
+                    wilaya: true
+                }
+            }
         }
     })
 
@@ -105,7 +109,7 @@ export default async function EditProductAdminPage({
                             {zones.length == 0 && (<TableBody></TableBody>)}
                             {zones.length !== 0 && (
                                 <TableBody>
-                                    {zones.map((z, index) => {
+                                    {zones.sort((z, z2) => z.wilaya?.code! - z2.wilaya?.code!).map((z, index) => {
                                         const wilaya = wilayas.find(w => w.id === z.wilaya_id);
                                         const commune = wilaya?.communes.find(c => c.id === z.commune_id)
                                         return (

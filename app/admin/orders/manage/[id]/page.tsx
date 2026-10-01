@@ -92,7 +92,7 @@ export default async function ManageOrderAdminPage({
                         <DynamicIcon name={orderData.orderStatus!.icon ?? undefined} />
                         {orderData.orderStatus!.title}
                     </div>
-                    <ChangeOrderStatus status_id={orderData.orderStatus?.id!} order_id={id} />
+                    <ChangeOrderStatus status_id={orderData.orderStatus?.id!} order_id={id} payment_status={orderData.payment_status} />
                     <DeleteOrderButton id={id} />
                 </div>
 
@@ -299,17 +299,21 @@ export default async function ManageOrderAdminPage({
                                             <div className="flex flex-col items-center relative">
                                                 <div className="w-1.5 h-1.5 bg-gray-300 absolute top-2 z-50"></div>
                                                 {orderData.history.length !== 1 && index !== orderData.history.length - 1 &&
-                                                    <div className="w-px h-17 bg-gray-400 absolute top-2"></div>}
+                                                    <div className="w-px h-17 bg-gray-400/70 absolute top-2"></div>}
                                             </div>
                                             <div className="flex flex-col gap-2">
-                                                <div style={{
-                                                    backgroundColor: hItem.status!.color ? hItem.status!.color.replace(')', ' / 20%)') : "oklch(55.1% 0.027 264.364 / 10%)",
-                                                    color: hItem.status!.color ? hItem.status!.color : "oklch(55.1% 0.027 264.364)"
-                                                }}
-                                                    className="text-sm w-fit capitalize p-0.5 px-1.5 whitespace-nowrap flex items-center gap-2">
-                                                    <DynamicIcon name={hItem.status!.icon ?? undefined} />
-                                                    {hItem.status?.title}
+                                                <div className="flex gap-2 items-center">
+                                                    <div style={{
+                                                        backgroundColor: hItem.status!.color ? hItem.status!.color.replace(')', ' / 20%)') : "oklch(55.1% 0.027 264.364 / 10%)",
+                                                        color: hItem.status!.color ? hItem.status!.color : "oklch(55.1% 0.027 264.364)"
+                                                    }}
+                                                        className="text-sm w-fit capitalize p-0.5 px-1.5 whitespace-nowrap flex items-center gap-2">
+                                                        <DynamicIcon name={hItem.status!.icon ?? undefined} />
+                                                        {hItem.status?.title}
+                                                    </div>
+                                                    {hItem.payment_status !== "en_attente" && <p>{capitalizeFirstLetter(hItem.payment_status!.replace('_', ' '))}</p>    }
                                                 </div>
+
                                                 {hItem.note && <p className="text-muted-foreground">{hItem.note}</p>}
                                             </div>
                                         </div>

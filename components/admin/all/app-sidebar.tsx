@@ -97,7 +97,7 @@ export function AppSidebar() {
                             <GalleryHorizontal />
                             <span>Carousels</span>
                         </SidebarMenuButton>
-                        <SidebarMenuButton render={<Link href="/admin/announcments" />} >
+                        <SidebarMenuButton render={<Link href="/admin/announcements" />} >
                             <AdIcon />
                             <span>Announcments</span>
                         </SidebarMenuButton>

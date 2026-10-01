@@ -1,4 +1,4 @@
-import { boolean, integer, jsonb, text, timestamp, varchar } from "drizzle-orm/pg-core/columns";
+import { boolean, integer, jsonb, pgEnum, text, timestamp, varchar } from "drizzle-orm/pg-core/columns";
 import { pgTable } from "drizzle-orm/pg-core/table";
 import { user } from "./auth-schema";
 import { index, uniqueIndex } from "drizzle-orm/pg-core";
@@ -51,7 +51,7 @@ export type communeType = typeof commune.$inferSelect;
 
 export const userInfo = pgTable("user_info", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    user_id: text().references(() => user.id).unique(),
+    user_id: text().references(() => user.id, {onDelete: "set null"}).unique(),
     address: varchar({ length: 255 }),
     postal: varchar({ length: 5 }),
     phone: varchar({ length: 10 }),
@@ -253,11 +253,22 @@ export const orderStatus = pgTable("order_status", {
 
 export type orderStatusType = typeof orderStatus.$inferSelect;
 
+export const orderPaymentStatus = pgEnum("payment_status", [
+  "en_attente",
+  "collecté",
+  "recu",
+  "retourne",
+  "rembourse",
+  "annule",
+]);
+export type OrderPaymentStatusType = (typeof orderPaymentStatus.enumValues)[number];
+
 export const order = pgTable("order", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     order_number: text(),
-    user_id: text().references(() => user.id),
+    user_id: text().references(() => user.id, {onDelete: "set null"}),
     status_id: integer().references(() => orderStatus.id),
+    payment_status: orderPaymentStatus().default("en_attente").notNull(),
     zone_id: integer().references(() => shippingZone.id),
     subtotal: integer(),
     discount: integer(),
@@ -307,6 +318,7 @@ export const orderHistory = pgTable("order_history", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     order_id: integer().references(() => order.id, {onDelete: "cascade"}),
     status_id: integer().references(() => orderStatus.id),
+    payment_status: orderPaymentStatus().default('en_attente'),
     note: text(),
     createdAt: timestamp().defaultNow(),
     updatedAt: timestamp().$onUpdate(() => new Date())

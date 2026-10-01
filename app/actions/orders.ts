@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/src";
-import { order, orderHistory, OrderInfo, orderItem, orderStatus, productVariant } from "@/src/db/schema";
+import { order, orderHistory, OrderInfo, orderItem, OrderPaymentStatusType, orderStatus, productVariant } from "@/src/db/schema";
 import { ActionResult, OrderFormScema, SingleCartItemType, VariantWithValuesImagesType } from "@/types";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -367,18 +367,20 @@ export const deleteOrder = async (id: number): Promise<ActionResult> => {
 }
 
 
-export const updateOrderStatus = async (order_id: number, status_id: number, note?: string): Promise<ActionResult> => {
+export const updateOrderStatus = async (order_id: number, status_id: number, payment_status: OrderPaymentStatusType, note?: string): Promise<ActionResult> => {
 
     try {
         // Update order
         await db.update(order).set({
-            status_id
+            status_id,
+            payment_status,
         }).where(eq(order.id, order_id))
 
         // Record Instance
         await db.insert(orderHistory).values({
             order_id,
             status_id,
+            payment_status,
             note
         })
 

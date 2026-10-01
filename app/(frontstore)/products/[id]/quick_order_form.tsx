@@ -140,8 +140,8 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
 
 
     return (
-        <Dialog open={open}>
-            <DialogTrigger onClick={() => setOpen(true)} render={<Button className="w-full">Acheter maintenant</Button>} />
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger render={<Button className="w-full">Acheter maintenant</Button>} />
             <DialogContent showCloseButton={false} className="w-full max-w-full sm:max-w-200">
                 <DialogHeader className="w-full">
                     <DialogTitle className={cn(step === 3 ? "w-full flex justify-end items-center" : "w-full flex justify-between items-center")}>
@@ -150,7 +150,7 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                         <Button onClick={() => setOpen(false)} type="button" variant="ghost" size="icon-sm" className="float-right"><XIcon /></Button>
                     </DialogTitle>
                 </DialogHeader>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 group w-full">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 group w-full max-w-full">
                     {step === 1 && <div className="space-y-4">
                         <Controller
                             name="name"
@@ -411,7 +411,7 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
 
                     {step === 1 && <Button className="w-full" variant="default" onClick={() => setStep(2)} disabled={commune ? false : true}>Suivant</Button>}
                     {step === 2 && <div className="flex items-center gap-3 w-full">
-                        <Button onClick={() => setStep(1)}><ArrowLeft /></Button>
+                        <Button size="icon" onClick={() => setStep(1)}><ArrowLeft /></Button>
                         <Button className="flex-1" variant="default" type="submit" disabled={zone_id ? false : true}>
                             Commander
                             {zone_id && !Number.isNaN(zone_id) && !Number.isNaN(zones.find(z => z.id === zone_id)?.price) &&

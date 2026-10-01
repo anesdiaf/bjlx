@@ -44,6 +44,13 @@ export default function EditVariantForm({ variant_id, product_id }: { variant_id
     })
     async function onSubmit(data: z.infer<typeof variantDataFormSchema>) {
 
+        if (data.on_promo && data.promo_price === 0) {
+            toast.add({
+                title:  "Il faudrait d'abord fixer un prix promotionnel.",
+                type: "warning"
+            })
+            return
+        }
 
         const response = await editVariant(data, variant_id)
 
@@ -97,7 +104,7 @@ export default function EditVariantForm({ variant_id, product_id }: { variant_id
                         <Button onClick={() => setOpen(false)} type="button" variant="ghost" size="icon-sm"><XIcon /></Button>
                     </DialogTitle>
                 </DialogHeader>
-                <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+                <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit, (err) => { console.log(err) })}>
                     <div className="flex items-center gap-4">
                         <Controller
                             name="sku"
@@ -115,7 +122,10 @@ export default function EditVariantForm({ variant_id, product_id }: { variant_id
                             render={({ field, fieldState }) => (
                                 <Field className="flex-1 w-full" data-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="stock">Stock</FieldLabel>
-                                    <Input {...field} id="stock" name="stock" type="number" className="flex-1 w-full" required aria-invalid={fieldState.invalid} />
+                                    <Input {...form.register("stock", {
+                                        valueAsNumber: true,
+                                    })} value={field.value}
+                                        onChange={(e) => field.onChange(e.target.valueAsNumber)} id="stock" name="stock" type="number" className="flex-1 w-full" required aria-invalid={fieldState.invalid} />
                                 </Field>
                             )}
                         />
@@ -139,7 +149,10 @@ export default function EditVariantForm({ variant_id, product_id }: { variant_id
                             render={({ field, fieldState }) => (
                                 <Field className="flex-1 w-full" aria-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="price">Prix</FieldLabel>
-                                    <Input {...field} id="price" name="price" type="number" className="flex-1 w-full" required aria-invalid={fieldState.invalid} />
+                                    <Input {...form.register("price", {
+                                        valueAsNumber: true,
+                                    })} value={field.value}
+                                        onChange={(e) => field.onChange(e.target.valueAsNumber)} id="price" name="price" type="number" className="flex-1 w-full" required aria-invalid={fieldState.invalid} />
                                 </Field>
                             )}
                         />
@@ -149,7 +162,10 @@ export default function EditVariantForm({ variant_id, product_id }: { variant_id
                             render={({ field, fieldState }) => (
                                 <Field className="flex-1 w-full" aria-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="buy_price">Prix d'achat</FieldLabel>
-                                    <Input {...field} id="buy_price" name="buy_price" type="number" className="flex-1 w-full" required aria-invalid={fieldState.invalid} />
+                                    <Input {...form.register("buy_price", {
+                                        valueAsNumber: true,
+                                    })} value={field.value}
+                                        onChange={(e) => field.onChange(e.target.valueAsNumber)} id="buy_price" name="buy_price" type="number" className="flex-1 w-full" required aria-invalid={fieldState.invalid} />
                                 </Field>
                             )}
                         />
@@ -159,7 +175,10 @@ export default function EditVariantForm({ variant_id, product_id }: { variant_id
                             render={({ field, fieldState }) => (
                                 <Field className="flex-1 w-full" aria-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="promo_price">Prix promo</FieldLabel>
-                                    <Input {...field} id="promo_price" name="promo_price" type="number" className="flex-1 w-full" aria-invalid={fieldState.invalid} />
+                                    <Input {...form.register("promo_price", {
+                                        valueAsNumber: true,
+                                    })} value={field.value}
+                                        onChange={(e) => field.onChange(e.target.valueAsNumber)} id="promo_price" name="promo_price" type="number" className="flex-1 w-full" aria-invalid={fieldState.invalid} />
                                 </Field>
                             )}
                         />
@@ -197,8 +216,6 @@ export default function EditVariantForm({ variant_id, product_id }: { variant_id
                                 </Field>
                             )}
                         />
-
-
                         <Button type="submit" className="flex-1">Confirmer</Button>
                     </div>
                 </form>

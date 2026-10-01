@@ -12,13 +12,13 @@ Stopped at creating cart orders server actions and testing
 
 
 Important: 
-1. Should add payment status to orders to check if shipping provider has delivered my money
-    1.2. Should add a type to order status to check with it, types are (preparation, delivered, return, refund)
-2. Should a constraint in the variant forms (add & edit) to check if promo is true price should be defined
+1. ✅ Should add payment status to orders to check if shipping provider has delivered my money
+    1.2. Should add a type to order status to check with it, types are (preparation, delivered, return, refund) ✅ (There's no need since i can list order statuses then search with them)
+2. ✅ Should a constraint in the variant forms (add & edit) to check if promo is true price should be defined
 
 
 
-✅ design cart page then ✅checkout then move to ⏳order creation then editing orders and handling history and returns
+✅ design cart page then ✅checkout then move to ✅order creation then ⏳editing orders and ✅handling history and ⏳returns
 
 
 The ideal image aspect should be a an aspect of a square 1:1
@@ -33,9 +33,9 @@ Actual Todos (These deferred because i need to prioritize things over others):
 
 2. Choose better fonts
 
-3. Buy now dialog should check if user is logged in
+3. ✅ Buy now dialog should check if user is logged in
 
-4. Customer can't order if stock is track and stock is 0 or below
+4. ✅ Customer can't order if stock is track and stock is 0 or below
 
 5. Consider giving zones titles and map coords
 

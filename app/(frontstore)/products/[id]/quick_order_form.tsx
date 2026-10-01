@@ -142,15 +142,15 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
     return (
         <Dialog open={open}>
             <DialogTrigger onClick={() => setOpen(true)} render={<Button className="w-full">Acheter maintenant</Button>} />
-            <DialogContent showCloseButton={false} className="w-full sm:max-w-200">
-                <DialogHeader>
+            <DialogContent showCloseButton={false} className="w-full max-w-full sm:max-w-200">
+                <DialogHeader className="w-full">
                     <DialogTitle className={cn(step === 3 ? "w-full flex justify-end items-center" : "w-full flex justify-between items-center")}>
                         {step === 1 && "Vos informations"}
-                        {step === 2 && "Livraison info et resumé"}
+                        {step === 2 && "Destination et résumé"}
                         <Button onClick={() => setOpen(false)} type="button" variant="ghost" size="icon-sm" className="float-right"><XIcon /></Button>
                     </DialogTitle>
                 </DialogHeader>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 group">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 group w-full">
                     {step === 1 && <div className="space-y-4">
                         <Controller
                             name="name"
@@ -304,91 +304,95 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                         />
                     </div>}
 
-                    {step === 2 && <><div>
-                        {!loadingZones ?
-                            <>
-                                {zones.length !== 0 ?
-                                    <Controller
-                                        name="zone_id"
-                                        control={form.control}
-                                        render={({ field, fieldState }) => (
-                                            <Field data-invalid={fieldState.invalid}>
-                                                <FieldLabel htmlFor="zone_id">
-                                                    Destination de livraison
-                                                </FieldLabel>
-                                                <Select id="zone_id" name={field.name}
-                                                    value={Number(field.value) ?? ""}
-                                                    onValueChange={field.onChange}>
-                                                    <SelectTrigger className="w-full" aria-invalid={fieldState.invalid}>
-                                                        <SelectValue placeholder="Choisissez une destination d'expédition">
-                                                            <span>{wilayas.find(w => w.id === zones.find(z => z.id === zone_id)?.wilaya_id)?.name} - </span>
-                                                            {wilayas.find(w => w.id === zones.find(z => z.id === zone_id)?.wilaya_id)?.name !== communes.find(c => c.id === zones.find(z => z.id === zone_id)?.commune_id)?.name &&
-                                                                <span>{communes.find(c => c.id === zones.find(z => z.id === zone_id)?.commune_id)?.name} - </span>}
-                                                            <span>{zones.find(z => z.id === zone_id)?.type == "office" ? "Bureau" : "À domicile"} - </span>
-                                                            <span>{formatNumbers(zones.find(z => z.id === zone_id)?.price, "DZ-dz")} D.A</span>
-                                                        </SelectValue>
-                                                    </SelectTrigger>
-                                                    <SelectContent >
-                                                        {zones.map((z) => {
-                                                            const zoneWilaya = wilayas.find(w => w.id === z.wilaya_id)?.name
-                                                            const zoneCommune = communes.find(c => c.id === z.commune_id)?.name
-                                                            return (
-                                                                <SelectItem key={z.id} value={z.id}>
-                                                                    {zoneWilaya} - {zoneWilaya !== zoneCommune && `${zoneCommune} -`} {z.type == "office" ? "Bureau" : "À domicile"} - {formatNumbers(z.price, "DZ-dz")} D.A
-                                                                </SelectItem>
-                                                            )
-                                                        })}
-                                                    </SelectContent>
-                                                </Select>
-                                                {fieldState.invalid && (
-                                                    <FieldError errors={[fieldState.error]} />
-                                                )}
+                    {step === 2 &&
+                        <div className="w-full space-y-4">
 
-                                            </Field>
-                                        )}
-                                    />
-                                    :
-                                    <p>Aucune expédition vers cette destination pour le moment.</p>}
-                            </>
+                            {!loadingZones ?
+                                <div className="w-full">
+                                    {zones.length !== 0 ?
+                                        <Controller
+                                            name="zone_id"
+                                            control={form.control}
+                                            render={({ field, fieldState }) => (
+                                                <Field data-invalid={fieldState.invalid}>
+                                                    <FieldLabel htmlFor="zone_id">
+                                                        Destination de livraison
+                                                    </FieldLabel>
+                                                    <Select id="zone_id" name={field.name}
+                                                        value={Number(field.value) ?? ""}
+                                                        onValueChange={field.onChange}>
+                                                        <SelectTrigger className="w-full" aria-invalid={fieldState.invalid}>
+                                                            <SelectValue placeholder="Choisissez une destination d'expédition">
+                                                                <span>{wilayas.find(w => w.id === zones.find(z => z.id === zone_id)?.wilaya_id)?.name} - </span>
+                                                                {wilayas.find(w => w.id === zones.find(z => z.id === zone_id)?.wilaya_id)?.name !== communes.find(c => c.id === zones.find(z => z.id === zone_id)?.commune_id)?.name &&
+                                                                    <span>{communes.find(c => c.id === zones.find(z => z.id === zone_id)?.commune_id)?.name} - </span>}
+                                                                <span>{zones.find(z => z.id === zone_id)?.type == "office" ? "Bureau" : "À domicile"} - </span>
+                                                                <span>{formatNumbers(zones.find(z => z.id === zone_id)?.price, "DZ-dz")} D.A</span>
+                                                            </SelectValue>
+                                                        </SelectTrigger>
+                                                        <SelectContent >
+                                                            {zones.map((z) => {
+                                                                const zoneWilaya = wilayas.find(w => w.id === z.wilaya_id)?.name
+                                                                const zoneCommune = communes.find(c => c.id === z.commune_id)?.name
+                                                                return (
+                                                                    <SelectItem key={z.id} value={z.id}>
+                                                                        {zoneWilaya} - {zoneWilaya !== zoneCommune && `${zoneCommune} -`} {z.type == "office" ? "Bureau" : "À domicile"} - {formatNumbers(z.price, "DZ-dz")} D.A
+                                                                    </SelectItem>
+                                                                )
+                                                            })}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    {fieldState.invalid && (
+                                                        <FieldError errors={[fieldState.error]} />
+                                                    )}
 
-                            :
-                            <div className="flex flex-col gap-4">
-                                <Skeleton className="h-5 w-full" />
-                                <Skeleton className="h-10 w-full" />
-                            </div>
+                                                </Field>
+                                            )}
+                                        />
+                                        :
+                                        <p>Aucune expédition vers cette destination pour le moment.</p>}
+                                </div>
 
-                        }
-                    </div>
-                        <div className={cn("w-full border border-dashed px-2 origin-top transition", zone_id ? "scale-y-100 h-fit" : "scale-y-0 h-0")}>
-                            <div className="w-full flex justify-between border-b border-dashed py-3">
-                                <p>Article </p>
-                                <p>{currentProduct.title}</p>
+                                :
+                                <div className="flex flex-col gap-4">
+                                    <Skeleton className="h-5 w-full" />
+                                    <Skeleton className="h-10 w-full" />
+                                </div>
+
+                            }
+
+                            <div className={cn("w-full border border-dashed px-2 origin-top transition", zone_id ? "scale-y-100 h-fit" : "scale-y-0 h-0")}>
+                                <div className="w-full flex gap-4 justify-between border-b border-dashed py-3">
+                                    <p>Article</p>
+                                    <p className="whitespace-normal">{currentProduct.title}</p>
+                                </div>
+                                <div className="w-full flex gap-4 justify-between border-b border-dashed py-3">
+                                    <p>{currentVariant.on_promo ? "Prix ​​unitaire" : "Prix"}</p>
+                                    <p>{formatNumbers(currentVariant.price, "DZ-dz")} D.A</p>
+                                </div>
+                                {currentVariant.on_promo && (
+                                    <>
+                                        <div className="w-full flex gap-4 justify-between border-b border-dashed py-3">
+                                            <p>Remise</p>
+                                            <p>{formatNumbers((Number(currentVariant.price) - Number(currentVariant.promo_price)), "DZ-dz")} D.A</p>
+                                        </div>
+                                        <div className="w-full flex gap-4 justify-between border-b border-dashed py-3">
+                                            <p>Prix promo</p>
+                                            <p>{formatNumbers(currentVariant.promo_price!, "DZ-dz")} D.A</p>
+                                        </div>
+                                    </>
+                                )}
+                                <div className="w-full flex gap-4 justify-between border-b border-dashed py-3">
+                                    <p>Frais de livraison</p>
+                                    <p>{formatNumbers(zones.find(z => z.id == zone_id)?.price, "DZ-dz")} D.A</p>
+                                </div>
+                                <div className="w-full flex gap-4 justify-between py-3">
+                                    <p>Total </p>
+                                    <p>{formatNumbers(Number(zones.find(z => z.id == zone_id)?.price) + (currentVariant.on_promo ? Number(currentVariant.promo_price) : Number(currentVariant.price)), "us")} D.A</p>
+                                </div>
                             </div>
-                            <div className="w-full flex justify-between border-b border-dashed py-3">
-                                <p>{currentVariant.on_promo ? "Prix ​​unitaire" : "Prix"}</p>
-                                <p>{formatNumbers(currentVariant.price, "DZ-dz")} D.A</p>
-                            </div>
-                            {currentVariant.on_promo && (
-                                <>
-                                    <div className="w-full flex justify-between border-b border-dashed py-3">
-                                        <p>Remise </p>
-                                        <p>{formatNumbers((Number(currentVariant.price) - Number(currentVariant.promo_price)), "DZ-dz")} D.A</p>
-                                    </div>
-                                    <div className="w-full flex justify-between border-b border-dashed py-3">
-                                        <p>Prix promo </p>
-                                        <p>{formatNumbers(currentVariant.promo_price!, "DZ-dz")} D.A</p>
-                                    </div>
-                                </>
-                            )}
-                            <div className="w-full flex justify-between border-b border-dashed py-3">
-                                <p>Frais de livraison </p>
-                                <p>{formatNumbers(zones.find(z => z.id == zone_id)?.price, "DZ-dz")} D.A</p>
-                            </div>
-                            <div className="w-full flex justify-between py-3">
-                                <p>Total </p>
-                                <p>{formatNumbers(Number(zones.find(z => z.id == zone_id)?.price) + (currentVariant.on_promo ? Number(currentVariant.promo_price) : Number(currentVariant.price)), "us")} D.A</p>
-                            </div>
-                        </div></>}
+                        </div>
+                    }
 
 
                     {step === 3 &&
@@ -406,7 +410,7 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
 
 
                     {step === 1 && <Button className="w-full" variant="default" onClick={() => setStep(2)} disabled={commune ? false : true}>Suivant</Button>}
-                    {step === 2 && <div className="flex items-center gap-3">
+                    {step === 2 && <div className="flex items-center gap-3 w-full">
                         <Button onClick={() => setStep(1)}><ArrowLeft /></Button>
                         <Button className="flex-1" variant="default" type="submit" disabled={zone_id ? false : true}>
                             Commander

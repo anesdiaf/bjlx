@@ -52,7 +52,7 @@ export default async function Home() {
       </div>
       <div className="space-y-4">
         <h2 className="text-2xl md:text-3xl font-serif">{t("ig_news")}</h2>
-        <p className="text-center text-muted-foreground">{t("ig_news_desc")} <a href="https://www.instagram.com/bjlx_dz">@bjlx_dz</a></p>
+        <p className="text-center text-muted-foreground">{t("ig_news_desc")} <a dir="ltr" href="https://www.instagram.com/bjlx_dz">@bjlx_dz</a></p>
       </div>
     </div>
   );

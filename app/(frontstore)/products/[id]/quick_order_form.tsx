@@ -16,7 +16,7 @@ import { cn, formatNumbers } from "@/lib/utils";
 import { communeType, shippingZoneType, wilayaType } from "@/src/db/schema";
 import { PorductWithDetailsType, OrderFormScema, userWithDataType, VariantWithValuesImagesType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, CheckCircle2Icon, XIcon } from "lucide-react";
+import { ArrowLeft, CheckCircle2Icon, CopyIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -31,6 +31,8 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
     const [loadingZones, setLoadingZones] = useState<boolean>(false)
 
     const [step, setStep] = useState<number>(1);
+
+    const [orderNumber, setOrderNumber] = useState<string>("");
 
 
 
@@ -65,6 +67,8 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                 title: "Votre commande a bien été confirmée.",
                 type: "success"
             })
+
+            setOrderNumber(response.data)
 
             //setOpen(false)
 
@@ -111,6 +115,11 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                         }
                     })
             }
+        } else {
+            if (step === 3) {
+                setStep(1)
+                setOrderNumber("")
+            }
         }
     }, [open])
 
@@ -138,6 +147,22 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
         }
     }, [wilaya])
 
+
+    function copyTextToClipboard() {
+        navigator.clipboard.writeText(orderNumber)
+            .then(() => {
+                toast.add({
+                    title: "Numéro de commande copié avec succès",
+                    type: "success"
+                })
+            })
+            .catch(err => {
+                toast.add({
+                    title: "Erreur lors de la copie du numéro de commande",
+                    type: "error"
+                })
+            });
+    }
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -399,12 +424,16 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
                         <div className="w-full flex flex-col items-center gap-6">
                             <CheckCircle2Icon size={128} className="text-green-500" />
                             <h1 className="text-lg font-bold text-center">Merci pour votre commande !</h1>
+                            <div className="flex gap-2 items-center text-primary" onClick={() => copyTextToClipboard()}>
+                                <p>#{orderNumber}</p>
+                                <CopyIcon size={16} />
+                            </div>
                             <div className="w-full flex flex-col items-center">
                                 <p>Votre commande a bien été confirmée.</p>
                                 <span className="text-muted-foreground">Nous vous contacterons prochainement pour la confirmer et préparer son expédition.</span>
                             </div>
-                            <Link className="text-primary font-medium w-full" href="/track-order"><Button variant="secondary" className="w-full">Suivre la commande</Button></Link>
-                            <Button onClick={() => { setOpen(false); setStep(1) }} className="w-full">Fermer</Button>
+                            <Link className="text-primary font-medium w-full" href={`/track-order?order=${orderNumber}`}><Button variant="secondary" className="w-full">Suivre la commande</Button></Link>
+                            <Button onClick={() => { setOpen(false); setStep(1), setOrderNumber("") }} className="w-full">Fermer</Button>
                         </div>
                     }
 

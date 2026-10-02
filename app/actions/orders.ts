@@ -337,7 +337,7 @@ export const createQuickOrder = async (orderData: z.infer<typeof OrderFormScema>
         }
 
         revalidatePath('/admin/orders')
-        return { success: true }
+        return { success: true, data: order_number }
     } catch (err) {
         if (err instanceof Error) {
 

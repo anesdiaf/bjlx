@@ -18,6 +18,7 @@ import { eq } from "drizzle-orm";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ReactNode } from "react";
+import { redirect } from "next/navigation";
 
 
 
@@ -59,7 +60,7 @@ export default async function SingleProductPage({
 
 
     if (!currentProduct) {
-        return <p>Product not found</p>
+        redirect("/")
     }
     // Product Variants
     const variants = currentProduct.variants;

@@ -1,7 +1,6 @@
 "use client"
 
 import { getProductVariant } from "@/app/actions/products";
-import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AttributeWithValuesType, PorductWithDetailsType, productValues, userWithDataType, VariantValues, VariantWithValuesImagesType } from "@/types";

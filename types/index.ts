@@ -284,6 +284,24 @@ export interface OrderWithInfoType {
     } | null;
 }
 
+export interface OrderHistoryWithStatusType {
+    id: number;
+    createdAt: Date | null;
+    updatedAt: Date | null;
+    status_id: number | null;
+    payment_status: "en_attente" | "collecté" | "recu" | "retourne" | "rembourse" | "annule" | null;
+    note: string | null;
+    order_id: number | null;
+    status: {
+        order: number | null;
+        id: number;
+        title: string | null;
+        default: boolean | null;
+        icon: string | null;
+        color: string | null;
+    } | null;
+}
+
 
 
 

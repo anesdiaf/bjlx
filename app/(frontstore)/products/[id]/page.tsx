@@ -202,7 +202,7 @@ export default async function SingleProductPage({
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
-                    <Carousel className="w-full" opts={{ loop: true }}>
+                    <Carousel dir="ltr" className="w-full" opts={{ loop: true }}>
                         <CarouselContent>
                             {prodcutImages.filter(i => i.variant_id === currentVariant!.id).map((i, index) => (
                                 <CarouselItem key={i.id}>
@@ -274,7 +274,7 @@ export default async function SingleProductPage({
                     <p className="font-sans">{currentProduct.desc}</p>
                 </div>
                 <div>
-                    <h1 className="text-lg font-medium">Vous aimerez peut-être aussi</h1>
+                    <h1 className="text-lg font-medium">{t("like_also")}</h1>
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 export default function AdminLayout({ children }: LayoutProps<"/admin">) {
     return (
-        <div className="font-sans w-full">
+        <div dir="ltr" className="font-sans w-full">
             <SidebarProvider>
                 <AppSidebar />
                 <main className="w-full">

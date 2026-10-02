@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/src/context/cart-store-provider";
 import { SingleCartItemType, VariantWithValuesImagesType } from "@/types";
+import { useTranslations } from "next-intl";
 
 export default function AddItemToCartButton({ title, variant }: { title: string, variant: VariantWithValuesImagesType }) {
 
@@ -26,8 +27,8 @@ export default function AddItemToCartButton({ title, variant }: { title: string,
         // Open Cart Drawer
         open()
     }
-
+    const t = useTranslations("All")
     return (
-        <Button onClick={() => addItemToCart()} className="w-full">Ajouter au panier</Button>
+        <Button onClick={() => addItemToCart()} className="w-full">{t("add_to_cart")}</Button>
     )
 }

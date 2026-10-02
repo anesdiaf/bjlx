@@ -12,11 +12,10 @@ import { Suspense } from "react";
 export default function FrontstoreLayout({ children }: LayoutProps<"/">) {
     return (
         <CartStoreProvider>
-            <div className="flex flex-col min-h-screen">
+            <div className="flex flex-col min-h-screen text-sm">
                 <header className="w-full border-b">
                     <div className="flex justify-center bg-accent text-primary h-12 items-center">
                         <AnnouncementBar />
-                        <LanguageChanger />
                     </div>
                     <div className="flex justify-between items-center max-w-6xl mx-auto py-3 lg:py-4 px-4 xl:px-0">
                         <Link href="/" className="text-3xl font-serif">BJLX</Link>
@@ -26,13 +25,14 @@ export default function FrontstoreLayout({ children }: LayoutProps<"/">) {
                                 <UserLink />
                             </Suspense>
                             <CartDrawer />
+                            <LanguageChanger />
                         </div>
                     </div>
                 </header>
                 <div className="w-full flex-1 h-full max-w-6xl mx-auto flex flex-col px-4 pt-6 pb-8 xl:px-0">
                     {children}
                 </div>
-                <Footer/>
+                <Footer />
             </div>
         </CartStoreProvider>
     )

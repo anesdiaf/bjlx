@@ -3,7 +3,7 @@
 import { getProductVariant } from "@/app/actions/products";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AttributeWithValuesType, PorductWithDetailsType, productValues, userWithDataType, VariantValues, VariantWithValuesImagesType } from "@/types";
+import { AttributeWithValuesType, ProductWithDetailsType, productValues, userWithDataType, VariantValues, VariantWithValuesImagesType } from "@/types";
 import { useEffect, useState } from "react";
 import QuickOrderForm from "./quick_order_form";
 import AddItemToCartButton from "./add-cart-button";
@@ -11,7 +11,7 @@ import AddItemToCartButton from "./add-cart-button";
 
 
 export default function OrderForm({ attributes, currentProduct, currentVariant, currentValues, variant_id, userInfo }
-    : { userInfo?: userWithDataType, attributes: AttributeWithValuesType[], currentProduct: PorductWithDetailsType, currentVariant: VariantWithValuesImagesType, currentValues: productValues, variant_id?: number }) {
+    : { userInfo?: userWithDataType, attributes: AttributeWithValuesType[], currentProduct: ProductWithDetailsType, currentVariant: VariantWithValuesImagesType, currentValues: productValues, variant_id?: number }) {
 
     // This made so i can export data later to order
     const [values, setValues] = useState<VariantValues>(currentVariant.values[0]?.values ?? {})
@@ -38,6 +38,8 @@ export default function OrderForm({ attributes, currentProduct, currentVariant, 
     useEffect(() => {
         currentVariant.values.length !== 0 && setValues(currentVariant.values[0].values!)
     }, [variant_id])
+
+
 
     return (
         <div className="space-y-4">

@@ -10,32 +10,33 @@ export default function LanguageChanger() {
     const locale = useLocale()
 
     const [locales] = useState([
-        { title: "Francais", value: "fr" },
-        { title: "العربية", value: "ar" }
+        { title: "العربية", value: "ar" },
+        { title: "Francais", value: "fr" }
+        
     ])
 
-    const handleLanguageChange = async (locale: string|null) => {
-        if(locale){
+    const handleLanguageChange = async (locale: string | null) => {
+        if (locale) {
             await changeLocaleAction(locale)
         }
     }
 
     return (
-        <div className="absolute max-w-6xl w-full mx-auto top-0">
 
-            <Select defaultValue={locale}  onValueChange={v => handleLanguageChange(v)}>
-                <SelectTrigger className="w-24 absolute right-0 top-0">
-                    <SelectValue placeholder="Language" >{locales.find(l => l.value === locale)?.title}</SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                    {locales.map((item) => (
-                        <SelectItem key={item.value} value={item.value}>
-                            {item.title}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
 
-        </div>
+        <Select value={locale} onValueChange={v => handleLanguageChange(v)}>
+            <SelectTrigger className="w-10">
+                <SelectValue placeholder="Language" className="capitalize">{locales.find(l => l.value === locale)?.value}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+                {locales.map((item) => (
+                    <SelectItem key={item.value} value={item.value}>
+                        {item.title}
+                    </SelectItem>
+                ))}
+            </SelectContent>
+        </Select>
+
+
     )
 }

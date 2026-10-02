@@ -1,15 +1,33 @@
+"use client";
 
-"use client"
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+} from "@/components/ui/carousel";
 
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay"
+import Autoplay from "embla-carousel-autoplay";
+import { useTranslations } from "next-intl";
+
 export default function AnnouncementBar() {
+    const t = useTranslations("temp");
+
+    const phone = "06 52 79 23 68";
+
     const anns = [
-        "La livraison disponible 69 wilaya",
-        "Appelez-nous au 07 77 81 90 08"
-    ]
+        t("shipping"),
+        t.rich("phone", {
+            phone: (chunks) => (
+                <span dir="ltr" className="inline-block">
+                    {phone}
+                </span>
+            ),
+        }),
+    ];
+
     return (
-        <Carousel orientation="vertical"
+        <Carousel
+            orientation="vertical"
             opts={{ loop: true, align: "start" }}
             plugins={[
                 Autoplay({
@@ -18,12 +36,17 @@ export default function AnnouncementBar() {
             ]}
         >
             <CarouselContent className="h-11">
-                {anns.map((_, index) => (
-                    <CarouselItem key={index} className="">
-                        <p className="text-center">{_}</p>
+                {anns.map((announcement, index) => (
+                    <CarouselItem
+                        key={index}
+                        className="h-full flex items-center"
+                    >
+                        <p className="text-center w-full">
+                            {announcement}
+                        </p>
                     </CarouselItem>
                 ))}
             </CarouselContent>
         </Carousel>
-    )
+    );
 }

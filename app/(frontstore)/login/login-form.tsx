@@ -12,6 +12,7 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
 import { LoginUser } from "@/app/actions/auth";
+import { useTranslations } from "next-intl";
 
 
 const formSchema = z.object({
@@ -64,6 +65,8 @@ export default function LoginForm() {
         }
     }
 
+    const t = useTranslations("All")
+
     return (
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
             <FieldGroup>
@@ -73,13 +76,13 @@ export default function LoginForm() {
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
                             <FieldLabel htmlFor="email">
-                                Email
+                                {t("email")}
                             </FieldLabel>
                             <Input
                                 {...field}
                                 id="email"
                                 aria-invalid={fieldState.invalid}
-                                placeholder="Email"
+                                placeholder="mohammad@gmail.com"
                             />
                             {fieldState.invalid && (
                                 <FieldError errors={[fieldState.error]} />
@@ -93,17 +96,17 @@ export default function LoginForm() {
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
                             <FieldLabel htmlFor="password">
-                                Mot de passe
+                                {t("password")}
                             </FieldLabel>
-                            <div className="relative">
+                            <div className="relative flex">
                                 <Input
                                     {...field}
                                     id="password"
                                     aria-invalid={fieldState.invalid}
                                     type={visible ? "text" : "password"}
-                                    placeholder="Mot de passe"
+                                    placeholder="●●●●●●●●●"
                                 />
-                                <Button size="icon-sm" variant="default" className="absolute w-10 h-10 right-0" onClick={() => setVisible(v => !v)}>{visible ? <EyeClosed size={16} /> : <Eye size={16} />} </Button>
+                                <Button size="icon-sm" variant="default" className="size-10" onClick={() => setVisible(v => !v)}>{visible ? <EyeClosed size={16} /> : <Eye size={16} />} </Button>
                             </div>
 
                             {fieldState.invalid && (
@@ -113,7 +116,7 @@ export default function LoginForm() {
                     )}
                 />
             </FieldGroup>
-            <Button type="submit" className="self-end">Se connecter</Button>
+            <Button type="submit" className="self-end">{t("login")}</Button>
         </form>
     )
 }

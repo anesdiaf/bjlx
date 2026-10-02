@@ -1,8 +1,37 @@
 {
   "All": {
+    "home": "Accueil",
+    "catalog": "Catalogue",
     "login": "Se connecter",
+    "welcome_back": "Bon retour — connectez-vous à votre compte.",
     "register": "Créer un compte",
-    "home": "Accueil"
+    "join_motivation": "Rejoignez-nous pour des offres exclusives et le suivi des commandes",
+    "name": "Nom",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmation": "Confirmation",
+    "confirm": "Confirmer",
+    "inscribe": "S'inscrire",
+    "already_have_account": "Vous avez déjà un compte ?",
+    "dont_have_account_already": "Vous n'avez pas de compte ?",
+    "cart": "Panier",
+    "your_cart": "Votre panier",
+    "cart_motivation": "Votre sélection, prête à briller.",
+    "empty_cart": "Votre panier est encore vide",
+    "empty_cart_desc": "Découvrez nos bijoux et laissez-vous séduire par votre prochain coup de cœur. ✨",
+    "subtotal": "Sous-total",
+    "discount": "Remise",
+    "total": "Total",
+    "see_cart": "Voir le panier",
+    "continue_shopping": "Poursuivre vos achats",
+    "currency_symbol": "D.A",
+    "ref": "Réf.",
+    "available_desc": "En stock - délai de livraison 2-5 jours ouvrables",
+    "inavailable_desc": "Rupture de stock — Contactez-nous pour plus d'informations",
+    "add_to_cart": "Ajouter au panier",
+    "buy_now": "Acheter maintenant",
+    "description": "Description",
+    "like_also": "Vous aimerez peut-être aussi"
   },
   "HomePage": {
     "featured_title": "L'Art de Briller",
@@ -27,5 +56,40 @@
     "find_us": "Vous nous trouvez ici",
     "login": "Se connecter",
     "register": "Créer un compte"
+  },
+  "ProductInfo": {
+    "shipping": {
+      "title": "Livraison",
+      "description": "Livraison à travers les 69 wilayas d'Algérie.",
+      "items": {
+        "fast": "Livraison rapide et fiable",
+        "cod": "Paiement à la livraison",
+        "fees": "Frais de livraison calculés selon votre wilaya"
+      }
+    },
+    "payment": {
+      "title": "Paiement",
+      "description": "Payez votre commande directement à la réception. Aucun paiement en ligne n'est nécessaire."
+    },
+    "returns": {
+      "title": "Retours & échanges",
+      "defect": "Les retours sont acceptés uniquement en cas de défaut du produit.",
+      "deadline": "Toute demande de retour doit être effectuée dans les 36 heures suivant la réception de la commande.",
+      "packaging": "Le produit doit être retourné avec son emballage et sa couverture d'origine en bon état."
+    },
+    "care": {
+      "title": "Entretien",
+      "description": "Pour préserver l'éclat de votre bijou :",
+      "items": {
+        "water": "Évitez le contact prolongé avec l'eau.",
+        "perfume": "Évitez les parfums et produits chimiques.",
+        "storage": "Rangez votre bijou dans son écrin après utilisation.",
+        "cleaning": "Nettoyez délicatement avec un chiffon doux."
+      }
+    }
+  },
+  "temp": {
+    "shipping": "Livraison disponible dans les 69 wilayas",
+    "phone": "Appelez-nous au <phone>{phone}</phone>"
   }
 }

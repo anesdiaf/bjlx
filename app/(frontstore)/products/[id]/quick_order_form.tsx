@@ -14,15 +14,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { cn, formatNumbers } from "@/lib/utils";
 import { communeType, shippingZoneType, wilayaType } from "@/src/db/schema";
-import { PorductWithDetailsType, OrderFormScema, userWithDataType, VariantWithValuesImagesType } from "@/types";
+import { ProductWithDetailsType, OrderFormScema, userWithDataType, VariantWithValuesImagesType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, CheckCircle2Icon, CopyIcon, XIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 
-export default function QuickOrderForm({ userInfo, currentProduct, currentVariant }: { userInfo?: userWithDataType, currentProduct: PorductWithDetailsType, currentVariant: VariantWithValuesImagesType }) {
+export default function QuickOrderForm({ userInfo, currentProduct, currentVariant }: { userInfo?: userWithDataType, currentProduct: ProductWithDetailsType, currentVariant: VariantWithValuesImagesType }) {
     const [open, setOpen] = useState(false);
 
     const [wilayas, setWilayas] = useState<wilayaType[]>([]);
@@ -164,9 +165,12 @@ export default function QuickOrderForm({ userInfo, currentProduct, currentVarian
             });
     }
 
+
+        const t = useTranslations("All")
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger render={<Button className="w-full">Acheter maintenant</Button>} />
+            <DialogTrigger render={<Button className="w-full">{t("buy_now")}</Button>} />
             <DialogContent showCloseButton={false} className="w-full max-w-full sm:max-w-200">
                 <DialogHeader className="w-full">
                     <DialogTitle className={cn(step === 3 ? "w-full flex justify-end items-center" : "w-full flex justify-between items-center")}>

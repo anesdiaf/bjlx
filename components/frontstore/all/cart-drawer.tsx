@@ -26,13 +26,14 @@ import {
 } from "@/components/ui/popover"
 import { attributeWithValuesType } from "@/src/db/schema"
 import { getAttributes } from "@/app/actions/attributes"
+import { useLocale, useTranslations } from "next-intl"
 
 
 
 
 export default function CartDrawer() {
 
-    const {items, isOpen, open, close, changeQty, remove } = useCartStore((state) => state)
+    const { items, isOpen, open, close, changeQty, remove } = useCartStore((state) => state)
 
 
 
@@ -82,9 +83,11 @@ export default function CartDrawer() {
         }
     }, [isOpen, items])
 
+    const locale = useLocale()
+    const t = useTranslations("All")
 
     return (
-        <Drawer open={isOpen} onOpenChange={res => res ? open() : close()} swipeDirection="right">
+        <Drawer open={isOpen} onOpenChange={res => res ? open() : close()} swipeDirection={locale === "fr" ? "right" : "left"}>
             <DrawerTrigger className="relative cursor-pointer">
                 <ShoppingBag strokeWidth={1.5} size={24} className="text-muted-foreground" />
                 {qty !== 0 &&
@@ -95,16 +98,16 @@ export default function CartDrawer() {
             </DrawerTrigger>
             <DrawerContent className="w-[94vw] md:min-w-110 md:w-fit">
                 <DrawerHeader>
-                    <DrawerTitle>Votre panier</DrawerTitle>
-                    <DrawerDescription>Votre sélection, prête à briller.</DrawerDescription>
+                    <DrawerTitle>{t("your_cart")}</DrawerTitle>
+                    <DrawerDescription>{t("cart_motivation")}</DrawerDescription>
                 </DrawerHeader>
                 <div className="p-4 w-full">
                     {items.length === 0 &&
                         <div className="flex flex-col items-center my-12 space-y-6">
                             <ShoppingCart size={128} className="text-primary" />
                             <div className="text-center">
-                                <h1 className="font-medium text-muted-foreground mb-3">Votre panier est encore vide</h1>
-                                <p className="text-muted-foreground text-justify md:w-2/3 mx-auto text-xs">Découvrez nos bijoux et laissez-vous séduire par votre prochain coup de cœur. ✨</p>
+                                <h1 className="font-medium text-muted-foreground mb-3">{t("empty_cart")}</h1>
+                                <p className="text-muted-foreground text-justify md:w-2/3 mx-auto text-xs">{t("empty_cart_desc")}</p>
                             </div>
 
                         </div>
@@ -156,9 +159,9 @@ export default function CartDrawer() {
                                                                 variant="destructive" size="icon-sm" className="border-red-500/12"><Trash2Icon /></Button>} />
                                                             <PopoverContent>
                                                                 <PopoverHeader>
-                                                                    <PopoverTitle>Confirmation</PopoverTitle>
+                                                                    <PopoverTitle>{t("confirmation")}</PopoverTitle>
                                                                 </PopoverHeader>
-                                                                <Button onClick={() => { remove(item.id) }}>Confirmer</Button>
+                                                                <Button onClick={() => { remove(item.id) }}>{t("confirm")}</Button>
                                                             </PopoverContent>
                                                         </Popover>
 
@@ -183,20 +186,23 @@ export default function CartDrawer() {
                 <DrawerFooter>
                     <div className="w-full border border-dashed px-2">
                         <div className="w-full flex justify-between items-center py-2 border-b border-dashed">
-                            <p>Sous-total</p>
+                            <p>{t("subtotal")}</p>
                             <p>{formatNumbers(subtotal, "US-us")} D.A</p>
                         </div>
                         <div className="w-full flex justify-between items-center py-2 border-b border-dashed">
-                            <p>Remise</p>
+                            <p>{t("discount")}</p>
                             <p>{formatNumbers(discount, "US-us")} D.A</p>
                         </div>
                         <div className="w-full flex justify-between items-center py-2 border-b border-dashed">
-                            <p>Total</p>
+                            <p>{t("total")}</p>
                             <p>{formatNumbers(total, "US-us")} D.A</p>
                         </div>
                     </div>
-                    <Link onClick={() => close()} href="/cart" className="w-full"><Button className="w-full">Voir le panier</Button></Link>
-                    <DrawerClose onClick={() => close()} render={<Button variant="outline" />}>Poursuivre vos achats</DrawerClose>
+                    <Link onClick={() => close()} href="/cart" className="w-full">
+                        <Button className="w-full">{t("see_cart")}</Button>
+                    </Link>
+                    <DrawerClose onClick={() => close()} 
+                    render={<Button variant="outline" />}>{t("continue_shopping")}</DrawerClose>
                 </DrawerFooter>
             </DrawerContent>
         </Drawer>

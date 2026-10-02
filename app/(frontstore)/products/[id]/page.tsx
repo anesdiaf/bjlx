@@ -19,6 +19,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ReactNode } from "react";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 
 
@@ -121,74 +122,66 @@ export default async function SingleProductPage({
         content: ReactNode;
     };
 
+
+    const pft = await getTranslations("ProductInfo");
+
     const accordionItems: AccordionItem[] = [
         {
             value: "livraison",
-            trigger: "Livraison",
+            trigger: pft("shipping.title"),
             content: (
                 <div className="space-y-3">
-                    <p>Livraison à travers les 69 wilayas d'Algérie.</p>
+                    <p>{pft("shipping.description")}</p>
 
                     <ul className="list-disc space-y-1 pl-5">
-                        <li>Livraison rapide et fiable</li>
-                        <li>Paiement à la livraison</li>
-                        <li>Frais de livraison calculés selon votre wilaya</li>
+                        <li>{pft("shipping.items.fast")}</li>
+                        <li>{pft("shipping.items.cod")}</li>
+                        <li>{pft("shipping.items.fees")}</li>
                     </ul>
                 </div>
             ),
         },
         {
             value: "paiement",
-            trigger: "Paiement",
+            trigger: pft("payment.title"),
             content: (
-                <p>
-                    Payez votre commande directement à la réception.
-                    Aucun paiement en ligne n'est nécessaire.
-                </p>
+                <p>{pft("payment.description")}</p>
             ),
         },
         {
             value: "retour",
-            trigger: "Retours & échanges",
+            trigger: pft("returns.title"),
             content: (
                 <div className="space-y-3">
-                    <p>
-                        Les retours sont acceptés uniquement en cas de défaut
-                        du produit.
-                    </p>
+                    <p>{pft("returns.defect")}</p>
 
-                    <p>
-                        Toute demande de retour doit être effectuée dans les
-                        36 heures suivant la réception de la commande.
-                    </p>
+                    <p>{pft("returns.deadline")}</p>
 
-                    <p>
-                        Le produit doit être retourné avec son emballage et sa
-                        couverture d'origine en bon état.
-                    </p>
+                    <p>{pft("returns.packaging")}</p>
                 </div>
             ),
         },
         {
             value: "entretien",
-            trigger: "Entretien",
+            trigger: pft("care.title"),
             content: (
                 <div className="space-y-3">
-                    <p>Pour préserver l'éclat de votre bijou :</p>
+                    <p>{pft("care.description")}</p>
 
                     <ul className="list-disc space-y-1 pl-5">
-                        <li>Évitez le contact prolongé avec l'eau.</li>
-                        <li>Évitez les parfums et produits chimiques.</li>
-                        <li>Rangez votre bijou dans son écrin après utilisation.</li>
-                        <li>
-                            Nettoyez délicatement avec un chiffon doux.
-                        </li>
+                        <li>{pft("care.items.water")}</li>
+                        <li>{pft("care.items.perfume")}</li>
+                        <li>{pft("care.items.storage")}</li>
+                        <li>{pft("care.items.cleaning")}</li>
                     </ul>
                 </div>
             ),
         },
     ];
 
+
+
+    const t = await getTranslations("All")
 
     return (
         <div className="space-y-6">
@@ -197,11 +190,11 @@ export default async function SingleProductPage({
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+                                <BreadcrumbLink href="/">{t("home")}</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/catalog">Catalog</BreadcrumbLink>
+                                <BreadcrumbLink href="/catalog">{t("catalog")}</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
@@ -209,7 +202,7 @@ export default async function SingleProductPage({
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
-                    <Carousel className="w-full">
+                    <Carousel className="w-full" opts={{ loop: true }}>
                         <CarouselContent>
                             {prodcutImages.filter(i => i.variant_id === currentVariant!.id).map((i, index) => (
                                 <CarouselItem key={i.id}>
@@ -232,16 +225,16 @@ export default async function SingleProductPage({
                         </div>
                         <div className="flex items-center">
                             {currentVariant.on_promo ?
-                                <div className=" flex items-end justify-center gap-3 text-xl text-center pr-6">
+                                <div className=" flex items-end justify-center gap-3 text-xl text-center">
                                     <p className="font-medium">{formatNumbers(currentVariant.promo_price!, "DZ-dz")} D.A</p>
-                                    <p className="text-muted-foreground text-sm line-through">{formatNumbers(currentVariant.price, "DZ-dz")} D.A</p>
+                                    <p className="text-muted-foreground text-sm line-through">{formatNumbers(currentVariant.price, "DZ-dz")} {t("currency_symbol")}</p>
                                 </div>
                                 :
-                                <p className="font-medium text-xl md:text-2xl text-center pr-6">{formatNumbers(currentVariant.price, "DZ-dz")} D.A</p>
+                                <p className="font-medium text-xl md:text-2xl text-center">{formatNumbers(currentVariant.price, "DZ-dz")} {t("currency_symbol")}</p>
                             }
 
-                            <Separator orientation="vertical" />
-                            <p className="text-muted-foreground px-6 text-center">Réf.: {currentVariant.sku}</p>
+                            <Separator orientation="vertical" className="mx-4" />
+                            <p className="text-muted-foregroundtext-center">{t("ref")} : {currentVariant.sku}</p>
                         </div>
                     </div>
                     <Accordion className="border-dashed border">
@@ -258,17 +251,17 @@ export default async function SingleProductPage({
                         currentVariant.stock! > 0 ?
                             <div className="flex items-center gap-2 text-xs text-green-600">
                                 <CheckCircle size={20} />
-                                <p>En stock - délai de livraison 2-5 jours ouvrables</p>
+                                <p>{t("available_desc")}</p>
                             </div>
                             :
                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                 <XCircle size={20} />
-                                <p>Rupture de stock — Contactez-nous pour plus d&apos;informations</p>
+                                <p>{t("inavailable_desc")}</p>
                             </div>
                         :
                         <div className="flex items-center gap-2 text-xs text-green-600">
                             <CheckCircle size={20} />
-                            <p>En stock - délai de livraison 2-5 jours ouvrables</p>
+                            <p>{t("available_desc")}</p>
                         </div>
                     }
                     <OrderForm userInfo={currentUserInfo} attributes={attributes!} currentProduct={currentProduct} variant_id={Number(variant)} currentVariant={currentVariant} currentValues={currentValues} />
@@ -276,7 +269,7 @@ export default async function SingleProductPage({
             </div>
             <div className="space-y-8">
                 <div className="space-y-4 bg-accent p-5">
-                    <h1 className="text-lg font-medium">Description</h1>
+                    <h1 className="text-lg font-medium">{t("description")}</h1>
                     <Separator />
                     <p className="font-sans">{currentProduct.desc}</p>
                 </div>

@@ -1,3 +1,4 @@
+import { Separator } from "@/components/ui/separator";
 import { auth } from "@/lib/auth"
 import { getTranslations } from "next-intl/server";
 import { headers } from "next/headers"
@@ -20,11 +21,11 @@ export default async function Footer() {
     const t = await getTranslations('HomePage');
 
     return (
-        <footer className="bg-accent py-6 px-4 xl:px-0 w-full space-y-10 text-sm">
-            <div className="max-w-6xl flex flex-col md:flex-row justify-between  mx-auto space-y-8 text-center md:text-left" >
+        <footer className="bg-accent py-8 px-4 xl:px-0 w-full text-sm">
+            <div className="max-w-6xl flex flex-col md:flex-row justify-between mx-auto space-y-8" >
                 <div className="space-y-3">
                     <h3 className="font-medium">{t("customer_space")}</h3>
-                    <div className="space-y-2 flex flex-col">
+                    <div className="space-y-2 flex flex-col items-start">
                         <Link href="/account" className="text-muted-foreground">{t("my_account")}</Link>
                         <Link href="/track-order" className="text-muted-foreground">{t("track_orders")}</Link>
                         {!user && (
@@ -37,19 +38,20 @@ export default async function Footer() {
                 </div>
                 <div className="space-y-3">
                     <h3 className="font-medium">{t("orders")}</h3>
-                    <div className="space-y-2 flex flex-col">
+                    <div className="space-y-2 flex flex-col items-start">
                         <Link href="/payment-and-shipping" className="text-muted-foreground">{t("shipping and payment")}</Link>
                         <Link href="/returns" className="text-muted-foreground">{t("returns")}</Link>
                     </div>
                 </div>
                 <div className="space-y-3">
                     <h3 className="font-medium">{t("conditions and politics")}</h3>
-                    <div className="space-y-2 flex flex-col">
+                    <div className="space-y-2 flex flex-col items-start">
                         <Link href="/terms-and-conditions" className="text-muted-foreground">{t("terms and conditions")}</Link>
                         <Link href="/privacy-policy" className="text-muted-foreground">{t("privacy policy")}</Link>
                     </div>
                 </div>
             </div>
+            <Separator className="my-8"/>
             <div className="max-w-6xl flex flex-col gap-6 md:flex-row justify-center md:justify-between mx-auto flex-wrap items-center">
                 <p>&copy; {new Date().getFullYear()} BJLX. {t("rights")}</p>
                 <div className="flex gap-4 items-center">

@@ -51,7 +51,7 @@ export type communeType = typeof commune.$inferSelect;
 
 export const userInfo = pgTable("user_info", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    user_id: text().references(() => user.id, {onDelete: "set null"}).unique(),
+    user_id: text().references(() => user.id, { onDelete: "set null" }).unique(),
     address: varchar({ length: 255 }),
     postal: varchar({ length: 5 }),
     phone: varchar({ length: 10 }),
@@ -67,6 +67,7 @@ export type userDataType = typeof userInfo.$inferSelect;
 export const category = pgTable("category", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     title: varchar({ length: 64 }).notNull(),
+    title_ar: varchar({ length: 64 }),
     status: boolean().default(true).notNull(),
     desc: text(),
     meta_url_key: varchar({ length: 255 }).unique().notNull(),
@@ -89,6 +90,7 @@ export type categoryInsertType = typeof category.$inferInsert;
 export const attribute = pgTable("attribute", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     title: varchar({ length: 255 }).notNull(),
+    title_ar: varchar({ length: 64 }),
     createdAt: timestamp().defaultNow(),
     updatedAt: timestamp().$onUpdate(() => new Date())
 })
@@ -99,6 +101,7 @@ export const attributeValues = pgTable("attribute_values", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     attribute_id: integer().references(() => attribute.id, { onDelete: "cascade" }),
     value: varchar({ length: 255 }).notNull(),
+    value_ar: varchar({ length: 255 }),
 })
 
 
@@ -112,6 +115,7 @@ export type attributeWithValuesType = attributeType & {
 export const collection = pgTable("collection", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     title: varchar({ length: 64 }).notNull(),
+    title_ar: varchar({ length: 64 }),
     desc: text().notNull(),
     meta_url_key: varchar({ length: 255 }).unique().notNull(),
     meta_title: varchar({ length: 64 }).notNull(),
@@ -126,14 +130,18 @@ export const collection = pgTable("collection", {
 export const product = pgTable("product", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     title: varchar({ length: 255 }).notNull(),
+    title_ar: varchar({ length: 255 }),
     desc: text(),
+    desc_ar: text(),
     category_id: integer().references(() => category.id),
     collection_id: integer().references(() => collection.id),
     status: boolean(),
     featured: boolean().default(false),
     meta_url_key: varchar({ length: 255 }).unique().notNull(),
     meta_title: varchar({ length: 255 }).notNull(),
+    meta_title_ar: varchar({ length: 255 }),
     meta_desc: text().notNull(),
+    meta_desc_ar: text(),
     createdAt: timestamp().defaultNow(),
     updatedAt: timestamp().$onUpdate(() => new Date())
 }, (table) => [
@@ -245,28 +253,29 @@ export type shippingZoneType = typeof shippingZone.$inferSelect;
 export const orderStatus = pgTable("order_status", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     title: varchar({ length: 255 }),
+    title_ar: varchar({ length: 255 }),
     order: integer(),
-    icon: varchar({length: 64}),
-    color: varchar({length: 64}),
+    icon: varchar({ length: 64 }),
+    color: varchar({ length: 64 }),
     default: boolean()
 })
 
 export type orderStatusType = typeof orderStatus.$inferSelect;
 
 export const orderPaymentStatus = pgEnum("payment_status", [
-  "en_attente",
-  "collecté",
-  "recu",
-  "retourne",
-  "rembourse",
-  "annule",
+    "en_attente",
+    "collecté",
+    "recu",
+    "retourne",
+    "rembourse",
+    "annule",
 ]);
 export type OrderPaymentStatusType = (typeof orderPaymentStatus.enumValues)[number];
 
 export const order = pgTable("order", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     order_number: text(),
-    user_id: text().references(() => user.id, {onDelete: "set null"}),
+    user_id: text().references(() => user.id, { onDelete: "set null" }),
     status_id: integer().references(() => orderStatus.id),
     payment_status: orderPaymentStatus().default("en_attente").notNull(),
     zone_id: integer().references(() => shippingZone.id),
@@ -287,9 +296,9 @@ export const order = pgTable("order", {
 
 export const orderItem = pgTable("order_item", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    order_id: integer().references(() => order.id, {onDelete: "cascade"}),
-    product_id: integer().references(() => product.id, {onDelete: "set null"}),
-    variant_id: integer().references(() => productVariant.id, {onDelete: "set null"}),
+    order_id: integer().references(() => order.id, { onDelete: "cascade" }),
+    product_id: integer().references(() => product.id, { onDelete: "set null" }),
+    variant_id: integer().references(() => productVariant.id, { onDelete: "set null" }),
     promo: boolean(),
     qty: integer(),
     buy_price: integer(),
@@ -305,7 +314,7 @@ export const orderItem = pgTable("order_item", {
 
 export const OrderInfo = pgTable("order_info", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    order_id: integer().references(() => order.id, {onDelete: "cascade"}),
+    order_id: integer().references(() => order.id, { onDelete: "cascade" }),
     name: varchar({ length: 255 }),
     phone: varchar({ length: 10 }),
     wilaya_id: integer().references(() => wilaya.id),
@@ -316,7 +325,7 @@ export const OrderInfo = pgTable("order_info", {
 
 export const orderHistory = pgTable("order_history", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    order_id: integer().references(() => order.id, {onDelete: "cascade"}),
+    order_id: integer().references(() => order.id, { onDelete: "cascade" }),
     status_id: integer().references(() => orderStatus.id),
     payment_status: orderPaymentStatus().default('en_attente'),
     note: text(),

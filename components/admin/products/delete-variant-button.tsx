@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { SubmitEvent } from "react";
+import { SubmitEvent, useState } from "react";
 import {
     Dialog,
     DialogContent,
@@ -11,10 +11,12 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/toast";
-import { deleteProduct, deleteVariant } from "@/app/actions/products";
+import { deleteVariant } from "@/app/actions/products";
 import { TrashIcon } from "lucide-react";
 
 export default function DeleteVariantButton({ id, productId }: { id: number, productId: number }) {
+
+    const [open, setOpen] = useState(false)
 
     const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -23,10 +25,11 @@ export default function DeleteVariantButton({ id, productId }: { id: number, pro
 
         if (response.success) {
             toast.add({
-                title: "Produit supprimé avec succès",
+                title: "Variante de produit supprimée avec succès",
                 type: "success"
             })
 
+            setOpen(false)
         } else {
             toast.add({
                 title: response.error,
@@ -37,7 +40,7 @@ export default function DeleteVariantButton({ id, productId }: { id: number, pro
     }
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger render={<Button type="submit" size="icon-sm"><TrashIcon /></Button>} />
             <DialogContent>
                 <DialogHeader>

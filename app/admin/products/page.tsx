@@ -57,7 +57,7 @@ export default async function ProductsAdminPage() {
                                         <TableCell><Link href={`/admin/products/edit/${p.id}`}>{p.title}</Link></TableCell>
                                         <TableCell>{p.status ? <Badge className="bg-green-400/20 text-green-700">Active</Badge> : <Badge variant="destructive">Inactive</Badge> }</TableCell>
                                         <TableCell className="text-right space-x-3.5 flex justify-center items-center">
-                                            <Link href={`/admin/products/edit/${p.id}`}><Button><Pen/></Button></Link>
+                                            <Link href={`/admin/products/edit/${p.id}`}><Button size="icon"><Pen/></Button></Link>
                                             <DeleteProductButton id={p.id}/>
                                         </TableCell>
                                     </TableRow>

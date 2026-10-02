@@ -28,9 +28,9 @@ interface Values {
 }
 
 
-export default function ProductImagesForm(
-    { id, productId, prodcutImages, productThumbnails }
-        : { id: number, productId: number, prodcutImages: variantImageType[], productThumbnails: variantThumbnailType[] }
+export default function VariantImagesForm(
+    { id, productId, variantImages, variantThumbnails }
+        : { id: number, productId: number, variantImages: variantImageType[], variantThumbnails: variantThumbnailType[] }
 ) {
 
 
@@ -54,7 +54,7 @@ export default function ProductImagesForm(
         }
 
 
-        if (prodcutImages.filter(i => i.variant_id === id).find(i => i.order === imageOrder)) {
+        if (variantImages.find(i => i.order === imageOrder)) {
             toast.add({
                 title: "Une image avec cette order existe déjà",
                 type: "error",
@@ -153,7 +153,7 @@ export default function ProductImagesForm(
         }
 
 
-        if (productThumbnails.filter(i => i.variant_id === id).find(i => i.order === thumbnailOrder)) {
+        if (variantThumbnails.find(i => i.order === thumbnailOrder)) {
             toast.add({
                 title: "Une vignette avec cette order existe déjà",
                 type: "error",
@@ -272,10 +272,10 @@ export default function ProductImagesForm(
                         </div>
                     </div>
                     <div className="flex-1">
-                        {prodcutImages.length === 0 && (
+                        {variantImages.length === 0 && (
                             <p className="text-muted-foreground text-center w-full mt-6">Aucune image n'a encore été ajoutée.</p>
                         )}
-                        {prodcutImages.length !== 0 &&
+                        {variantImages.length !== 0 &&
                             <ScrollArea className="h-62">
                                 <Table className="max-h-62 overflow-hidden">
                                     <TableHeader>
@@ -287,7 +287,7 @@ export default function ProductImagesForm(
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {prodcutImages.filter(i => i.variant_id === id).map((v, index) => (
+                                        {variantImages.map((v, index) => (
                                             <TableRow key={v.id}>
                                                 <TableCell className="text-center">{index + 1}</TableCell>
                                                 <TableCell>
@@ -366,10 +366,10 @@ export default function ProductImagesForm(
                         </div>
                     </div>
                     <div className="flex-1">
-                        {productThumbnails.length === 0 && (
+                        {variantThumbnails.length === 0 && (
                             <p className="text-muted-foreground text-center w-full mt-6">Aucune vignette n'a encore été ajoutée.</p>
                         )}
-                        {productThumbnails.length !== 0 &&
+                        {variantThumbnails.length !== 0 &&
                             <ScrollArea className="h-62">
 
 
@@ -383,7 +383,7 @@ export default function ProductImagesForm(
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {productThumbnails.filter(i => i.variant_id === id).map((v, index) => (
+                                        {variantThumbnails.map((v, index) => (
                                             <TableRow key={v.id}>
                                                 <TableCell className="text-center">{index + 1}</TableCell>
                                                 <TableCell>

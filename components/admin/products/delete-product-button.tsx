@@ -38,7 +38,7 @@ export default function DeleteProductButton({ id }: { id: number }) {
 
     return (
         <Dialog>
-            <DialogTrigger render={<Button type="submit"><TrashIcon /></Button>} />
+            <DialogTrigger render={<Button size="icon" variant="destructive"><TrashIcon /></Button>} />
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>En êtes-vous absolument sûr ?</DialogTitle>

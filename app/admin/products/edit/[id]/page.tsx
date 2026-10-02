@@ -4,7 +4,7 @@ import { CheckIcon, ChevronLeft, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import EditProductForm from "./product-form";
 import { category, productVariant, productVariantValues, variantImage, variantThumbnail } from "@/src/db/schema";
-import { eq} from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import CreateVariantForm from "./variant-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import DeleteVariantButton from "@/components/admin/products/delete-variant-button";
 import SetAttributesForm from "./attributes-form";
 import EditVariantForm from "./edit-variant-form";
-import ProductImagesForm from "./images-form";
+import VariantImagesForm from "./images-form";
 
 
 export default async function EditProductAdminPage({
@@ -24,7 +24,16 @@ export default async function EditProductAdminPage({
     const id = (await params).id;
 
     let currentProduct = await db.query.product.findFirst({
-        where: { id }
+        where: { id },
+        with: {
+            variants: {
+                with: {
+                    images: true,
+                    thumbnails: true,
+                    values: true
+                }
+            }
+        }
     });
 
 
@@ -39,17 +48,6 @@ export default async function EditProductAdminPage({
             values: true
         }
     })
-
-    // Product Variants
-    const variants = await db.select().from(productVariant).where(eq(productVariant.product_id, id))
-    // productVariantValues (to check if product has attributes)
-    const variantValues = await db.select().from(productVariantValues).where(eq(productVariantValues.product_id, id))
-
-
-    // Product Images
-    const prodcutImages = await db.select().from(variantImage).where(eq(variantImage.product_id, id));
-    // Prodcut Thumbnails
-    const prodcutThumbnails = await db.select().from(variantThumbnail).where(eq(variantThumbnail.product_id, id));
 
     return (
         <div className="w-full space-y-10">
@@ -74,7 +72,7 @@ export default async function EditProductAdminPage({
                     </CardHeader>
                     <CardContent className="space-y-8">
                         <Table>
-                            <TableCaption>{variants.length === 0 && "Aucune variante n'a encore été ajoutée."}</TableCaption>
+                            <TableCaption>{currentProduct.variants.length === 0 && "Aucune variante n'a encore été ajoutée."}</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead className="w-16">#</TableHead>
@@ -87,28 +85,34 @@ export default async function EditProductAdminPage({
                                     <TableHead>Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
-                            {variants.length == 0 && (<TableBody></TableBody>)}
-                            {variants.length !== 0 && (
+                            {currentProduct.variants.length == 0 && (<TableBody></TableBody>)}
+                            {currentProduct.variants.length !== 0 && (
                                 <TableBody>
-                                    {variants.map((v, index) => (
-                                        <TableRow key={v.id}>
-                                            <TableCell className="font-medium">{index + 1}</TableCell>
-                                            <TableCell><Link href={`/admin/products/edit/${v.id}`}>{v.sku}</Link></TableCell>
-                                            <TableCell>{v.price} D.A <Badge variant="outline">({Number(v.price) - Number(v.buy_price)} D.A)</Badge></TableCell>
-                                            <TableCell>{v.buy_price} D.A</TableCell>
-                                            <TableCell>
-                                                {v.on_promo ? v.promo_price + " D.A" : ""}
-                                            </TableCell>
-                                            <TableCell>{v.default && <CheckIcon size={16} />}</TableCell>
-                                            <TableCell>{v.status ? <Badge className="bg-green-400/20 text-green-700">Active</Badge> : <Badge variant="destructive">Inactive</Badge>}</TableCell>
-                                            <TableCell className="text-right space-x-2 flex justify-center items-center">
-                                                <SetAttributesForm variantValues={variantValues.find(va => va.variant_id === v.id)} attributes={attributes} id={v.id} productId={id} />
-                                                <ProductImagesForm id={v.id} productId={id} prodcutImages={prodcutImages} productThumbnails={prodcutThumbnails}/>
-                                                <EditVariantForm variant_id={v.id} product_id={id}/>
-                                                <DeleteVariantButton id={v.id} productId={id} />
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                    {currentProduct.variants.map((v, index) => {
+                                        const images = currentProduct.variants.find(pv => pv.id === v.id)?.images;
+                                        const thumbs = currentProduct.variants.find(pv => pv.id === v.id)?.thumbnails;
+                                        const values = currentProduct.variants.find(pv => pv.id === v.id)?.values;
+                                        const variant_values = (values && values.length !== 0) ? values![0].values! : undefined;
+                                        return (
+                                            <TableRow key={v.id}>
+                                                <TableCell className="font-medium">{index + 1}</TableCell>
+                                                <TableCell><Link href={`/admin/products/edit/${v.id}`}>{v.sku}</Link></TableCell>
+                                                <TableCell>{v.price} D.A <Badge variant="outline">({Number(v.price) - Number(v.buy_price)} D.A)</Badge></TableCell>
+                                                <TableCell>{v.buy_price} D.A</TableCell>
+                                                <TableCell>
+                                                    {v.on_promo ? v.promo_price + " D.A" : ""}
+                                                </TableCell>
+                                                <TableCell>{v.default && <CheckIcon size={16} />}</TableCell>
+                                                <TableCell>{v.status ? <Badge className="bg-green-400/20 text-green-700">Active</Badge> : <Badge variant="destructive">Inactive</Badge>}</TableCell>
+                                                <TableCell className="text-right space-x-2 flex justify-center items-center">
+                                                    <SetAttributesForm variantValues={variant_values} attributes={attributes} id={v.id} productId={id} />
+                                                    <VariantImagesForm id={v.id} productId={id} variantImages={images!} variantThumbnails={thumbs!} />
+                                                    <EditVariantForm variant_id={v.id} product_id={id} />
+                                                    <DeleteVariantButton id={v.id} productId={id} />
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    })}
                                 </TableBody>
                             )}
                         </Table>

@@ -39,6 +39,8 @@ Actual Todos (These deferred because i need to prioritize things over others):
 
 5. Consider giving zones titles and map coords
 
+6. Should get all values available for a product then setup pairs dynamically each attribute value should get it's possible choices like argenté we have only L and S so M should be disabled
+
 
 
 Temp Notes:

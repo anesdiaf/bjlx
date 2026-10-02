@@ -15,7 +15,7 @@ export default function OrderForm({ attributes, currentProduct, currentVariant, 
     : { userInfo?: userWithDataType, attributes: AttributeWithValuesType[], currentProduct: PorductWithDetailsType, currentVariant: VariantWithValuesImagesType, currentValues: productValues, variant_id?: number }) {
 
     // This made so i can export data later to order
-    const [values, setValues] = useState<VariantValues>({})
+    const [values, setValues] = useState<VariantValues>(currentVariant.values[0].values! ?? {})
 
 
 
@@ -28,13 +28,12 @@ export default function OrderForm({ attributes, currentProduct, currentVariant, 
         setValues(newValues);
     }
 
-    useEffect(() => {
-
-        currentVariant.values.length !== 0 && setValues(currentVariant.values[0].values!)
-    }, [])
 
     useEffect(() => {
-        getProductVariant(currentVariant.product_id!, values)
+        if (values !== currentVariant.values[0].values) {
+            getProductVariant(currentVariant.product_id!, values)
+        }
+
     }, [values])
 
     useEffect(() => {

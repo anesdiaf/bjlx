@@ -288,8 +288,8 @@ export const order = pgTable("order", {
 export const orderItem = pgTable("order_item", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     order_id: integer().references(() => order.id, {onDelete: "cascade"}),
-    product_id: integer().references(() => product.id),
-    variant_id: integer().references(() => productVariant.id),
+    product_id: integer().references(() => product.id, {onDelete: "set null"}),
+    variant_id: integer().references(() => productVariant.id, {onDelete: "set null"}),
     promo: boolean(),
     qty: integer(),
     buy_price: integer(),

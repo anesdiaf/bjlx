@@ -88,13 +88,12 @@ export const getProductVariant = async (product_id: number, values: VariantValue
         return { success: false, error: "Erreur lors du chargement des données produit" }
     }
 
-
+    console.log(isSuccess);
     if (isSuccess) {
         revalidatePath(`/products/${product_id}?variant=${id!}`)
         redirect(`/products/${product_id}?variant=${id!}`)
     } else {
         revalidatePath(`/products/${product_id}`)
-        redirect(`/products/${product_id}`)
     }
 }
 
@@ -201,6 +200,10 @@ export const deleteProduct = async (id: number): Promise<ActionResult> => {
         // handle sql query
         await db.delete(product).where(eq(product.id, id))
 
+        // delete product folder
+        await disk.deleteAll(`/products/${id}`)
+
+
         // revalidate path
         revalidatePath("/admin/products")
 
@@ -284,6 +287,10 @@ export const deleteVariant = async (id: number, productId: number): Promise<Acti
     try {
         // handle sql query
         await db.delete(productVariant).where(eq(productVariant.id, id))
+
+
+        // delete variant folder
+        await disk.deleteAll(`/products/${productId}/${id}`)
 
         // revalidate path
         revalidatePath(`/admin/products/edit/${productId}`)

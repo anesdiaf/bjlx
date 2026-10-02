@@ -77,15 +77,18 @@ export default async function SingleProductPage({
 
     if (variants.length > 1) {
         variants.map(v => {
-            const values = v.values[0].values;
-            if (values) {
-                Object.keys(values).forEach(key => {
-                    if (!currentValues[Number(key)]) {
-                        currentValues[Number(key)] = []
-                    }
-                    currentValues[Number(key)].push(values[Number(key)])
-                })
+            if (v.values && v.values.length !== 0) {
+                const values = v.values[0].values;
+                if (values && Object.keys(values).length !== 0) {
+                    Object.keys(values).forEach(key => {
+                        if (!currentValues[Number(key)]) {
+                            currentValues[Number(key)] = []
+                        }
+                        currentValues[Number(key)].push(values[Number(key)])
+                    })
+                }
             }
+
         })
     }
     // Variant Images
@@ -108,8 +111,6 @@ export default async function SingleProductPage({
             }
         })
     }
-
-
 
 
     return (
@@ -170,17 +171,17 @@ export default async function SingleProductPage({
                     {currentVariant.track_stock ?
                         currentVariant.stock! > 0 ?
                             <div className="flex items-center gap-2 text-xs text-green-600">
-                                <CheckCircle size={20}/>
+                                <CheckCircle size={20} />
                                 <p>En stock - délai de livraison 2-5 jours ouvrables</p>
                             </div>
                             :
                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <XCircle size={20}/>
+                                <XCircle size={20} />
                                 <p>Rupture de stock — Contactez-nous pour plus d&apos;informations</p>
                             </div>
                         :
                         <div className="flex items-center gap-2 text-xs text-green-600">
-                            <CheckCircle size={20}/>
+                            <CheckCircle size={20} />
                             <p>En stock - délai de livraison 2-5 jours ouvrables</p>
                         </div>
                     }

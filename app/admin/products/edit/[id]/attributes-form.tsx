@@ -19,10 +19,10 @@ import { useEffect, useState } from "react"
 
 
 
-export default function SetAttributesForm({ variantValues, attributes, id, productId }: { variantValues?: productVariantValuesType, attributes: attributeWithValuesType[], id: number, productId: number }) {
+export default function SetAttributesForm({ variantValues, attributes, id, productId }: { variantValues?: VariantValues, attributes: attributeWithValuesType[], id: number, productId: number }) {
 
 
-    const [values, setValues] = useState<VariantValues>({})
+    const [values, setValues] = useState<VariantValues>(variantValues ?? {})
 
     const [open, setOpen] = useState(false);
 
@@ -62,16 +62,13 @@ export default function SetAttributesForm({ variantValues, attributes, id, produ
     }
 
     useEffect(() => {
-        if (variantValues && variantValues.values) {
-            const currentVariantValues: VariantValues = variantValues.values;
-            Object.keys(currentVariantValues!).map(v => {
-                setValues({ ...values, [Number(v)]: currentVariantValues[Number(v)] })
-            })
+        if (open) {
+            setValues(variantValues ?? {})
         }
-    }, [])
+    }, [open])
 
     useEffect(() => {
-
+        //console.log(values);
     }, [values])
 
     return (
@@ -90,7 +87,7 @@ export default function SetAttributesForm({ variantValues, attributes, id, produ
                         <div key={attr.id} className="flex items-end w-full gap-4">
                             <Field className="w-full flex-1">
                                 <FieldLabel>{attr.title}</FieldLabel>
-                                <Select value={values[attr.id] ?? undefined} onValueChange={v => handleChanges(attr.id, v)}>
+                                <Select value={values[attr.id] ?? ""} onValueChange={v => handleChanges(attr.id, v)}>
                                     <SelectTrigger>
                                         <SelectValue>{attr.values.find(v => v.id == values[attr.id])?.value}</SelectValue>
                                     </SelectTrigger>

@@ -1,0 +1,31 @@
+{
+  "All": {
+    "login": "Se connecter",
+    "register": "Créer un compte",
+    "home": "Accueil"
+  },
+  "HomePage": {
+    "featured_title": "L'Art de Briller",
+    "trust_strip_quality": "Qualité Exceptionnelle",
+    "trust_strip_quality_desc": "Des bijoux élégants, soigneusement sélectionnés pour durer.",
+    "trust_strip_delivery": "Livraison fiable",
+    "trust_strip_delivery_desc": "Livraison rapide et sécurisée dans les 69 wilayas d’Algérie.",
+    "trust_strip_customer": "Le Client D'abord",
+    "trust_strip_customer_desc": "Nous sommes toujours là pour rendre votre expérience exceptionnelle.",
+    "ig_news": "Contes de fées du quotidien",
+    "ig_news_desc": "Suivez-nous sur Instagram",
+    "customer_space": "Espace client",
+    "my_account": "Mon compte",
+    "track_orders": "Suivez vos commandes",
+    "orders": "Commandes",
+    "shipping and payment": "Livraison et paiement",
+    "returns": "Retours",
+    "conditions and politics": "Conditions et politiques",
+    "terms and conditions": "Terms et conditions",
+    "privacy policy": "Politique de Confidentialité",
+    "rights": "Tous droits réservés.",
+    "find_us": "Vous nous trouvez ici",
+    "login": "Se connecter",
+    "register": "Créer un compte"
+  }
+}

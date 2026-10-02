@@ -1,0 +1,31 @@
+{
+  "All": {
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "home": "الرئيسية"
+  },
+  "HomePage": {
+    "featured_title": "فن البريق",
+    "trust_strip_quality": "جودة استثنائية",
+    "trust_strip_quality_desc": "مجوهرات أنيقة، مختارة بعناية لتدوم طويلاً.",
+    "trust_strip_delivery": "توصيل موثوق",
+    "trust_strip_delivery_desc": "توصيل سريع وآمن إلى 69 ولاية في الجزائر.",
+    "trust_strip_customer": "العميل أولاً",
+    "trust_strip_customer_desc": "نحن دائماً هنا لنجعل تجربتكم استثنائية.",
+    "ig_news": "حكايات من الحياة اليومية",
+    "ig_news_desc": "تابعونا على إنستغرام",
+    "customer_space": "مساحة العميل",
+    "my_account": "حسابي",
+    "track_orders": "تتبع طلباتك",
+    "orders": "الطلبات",
+    "shipping and payment": "التوصيل والدفع",
+    "returns": "الإرجاع",
+    "conditions and politics": "الشروط والسياسات",
+    "terms and conditions": "الشروط والأحكام",
+    "privacy policy": "سياسة الخصوصية",
+    "rights": "جميع الحقوق محفوظة.",
+    "find_us": "تجدنا هنا",
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب"
+  }
+}

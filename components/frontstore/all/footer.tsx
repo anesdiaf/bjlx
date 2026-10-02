@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth"
+import { getTranslations } from "next-intl/server";
 import { headers } from "next/headers"
 import Link from "next/link";
 
@@ -14,41 +15,45 @@ export default async function Footer() {
         user = session.user;
     }
 
+
+    
+    const t = await getTranslations('HomePage');
+
     return (
         <footer className="bg-accent py-6 px-4 xl:px-0 w-full space-y-10 text-sm">
             <div className="max-w-6xl flex flex-col md:flex-row justify-between  mx-auto space-y-8 text-center md:text-left" >
                 <div className="space-y-3">
-                    <h3 className="font-medium">Espace client</h3>
+                    <h3 className="font-medium">{t("customer_space")}</h3>
                     <div className="space-y-2 flex flex-col">
-                        <Link href="/account" className="text-muted-foreground">Mon compte</Link>
-                        <Link href="/track-order" className="text-muted-foreground">Suivez vos commandes</Link>
+                        <Link href="/account" className="text-muted-foreground">{t("my_account")}</Link>
+                        <Link href="/track-order" className="text-muted-foreground">{t("track_orders")}</Link>
                         {!user && (
                             <>
-                                <Link href="/login" className="text-muted-foreground">Se connecter</Link>
-                                <Link href="/register" className="text-muted-foreground">Créer un compte</Link>
+                                <Link href="/login" className="text-muted-foreground">{t("login")}</Link>
+                                <Link href="/register" className="text-muted-foreground">{t("register")}</Link>
                             </>
                         )}
                     </div>
                 </div>
                 <div className="space-y-3">
-                    <h3 className="font-medium">Commandes</h3>
+                    <h3 className="font-medium">{t("orders")}</h3>
                     <div className="space-y-2 flex flex-col">
-                        <Link href="/payment-and-shipping" className="text-muted-foreground">Livraison et paiement</Link>
-                        <Link href="/returns" className="text-muted-foreground">Retours</Link>
+                        <Link href="/payment-and-shipping" className="text-muted-foreground">{t("shipping and payment")}</Link>
+                        <Link href="/returns" className="text-muted-foreground">{t("returns")}</Link>
                     </div>
                 </div>
                 <div className="space-y-3">
-                    <h3 className="font-medium">Conditions et politiques</h3>
+                    <h3 className="font-medium">{t("conditions and politics")}</h3>
                     <div className="space-y-2 flex flex-col">
-                        <Link href="/terms-and-conditions" className="text-muted-foreground">Terms et conditions</Link>
-                        <Link href="/privacy-policy" className="text-muted-foreground">Politique de Confidentialité</Link>
+                        <Link href="/terms-and-conditions" className="text-muted-foreground">{t("terms and conditions")}</Link>
+                        <Link href="/privacy-policy" className="text-muted-foreground">{t("privacy policy")}</Link>
                     </div>
                 </div>
             </div>
             <div className="max-w-6xl flex flex-col gap-6 md:flex-row justify-center md:justify-between mx-auto flex-wrap items-center">
-                <p>&copy; {new Date().getFullYear()} BJLX. Tous droits réservés.</p>
+                <p>&copy; {new Date().getFullYear()} BJLX. {t("rights")}</p>
                 <div className="flex gap-4 items-center">
-                    <p className="hidden md::block">Vous nous trouvez ici</p>
+                    <p className="hidden md:block">{t("find_us")}</p>
                     <a href="https://www.facebook.com/bjlxdz" className="group">
                         <svg className="size-8 mb-0.5 fill-primary group-hover:fill-primary/80 transition" viewBox="0 0 24.00 24.00" xmlns="http://www.w3.org/2000/svg" strokeWidth="0.00024000000000000003">
                             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>

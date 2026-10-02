@@ -129,3 +129,10 @@
     @apply font-mono;
   }
 }
+
+html[lang="ar"] {
+  --font-serif: var(--font-arabic), sans-serif;
+  --font-sans: var(--font-arabic), sans-serif;
+  --font-mono: var(--font-arabic), sans-serif;
+  --font-heading: var(--font-arabic), sans-serif;
+}

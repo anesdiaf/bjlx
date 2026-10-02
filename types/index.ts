@@ -56,7 +56,7 @@ export interface AttributesObjectsWithValues {
 
 // Product
 
-export interface PorductWithDetailsType {
+export interface ProductWithDetailsType {
     title: string;
     desc: string | null;
     id: number;
@@ -93,6 +93,41 @@ export interface PorductWithDetailsType {
             order: number | null;
             product_id: number | null;
             variant_id: number | null;
+        }[];
+    }[];
+}
+
+export interface ProductWithVariantDataType {
+    id: number;
+    title: string;
+    desc: string | null;
+    status: boolean | null;
+    meta_url_key: string;
+    meta_title: string;
+    meta_desc: string;
+    createdAt: Date | null;
+    updatedAt: Date | null;
+    category_id: number | null;
+    collection_id: number | null;
+    featured: boolean | null;
+    variants: {
+        id: number;
+        status: boolean | null;
+        default: boolean | null;
+        product_id: number | null;
+        sku: string;
+        stock: number;
+        track_stock: boolean | null;
+        price: number;
+        buy_price: number;
+        promo_price: number;
+        on_promo: boolean | null;
+        thumbnails: {
+            order: number | null;
+            id: number;
+            product_id: number | null;
+            variant_id: number | null;
+            url: string;
         }[];
     }[];
 }

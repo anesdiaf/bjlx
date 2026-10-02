@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { RegisterUser } from "@/app/actions/auth";
 
 
 const formSchema = z.object({
@@ -45,8 +46,6 @@ export default function RegisterForm() {
     })
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        console.log(data)
 
         const { name, email, password, confirmation } = data
 
@@ -58,31 +57,23 @@ export default function RegisterForm() {
             return;
         }
 
-        const { data: response, error } = await authClient.admin.createUser({
-            name, // required, The name of the user.
-            email, // required, The email address of the user.
-            password, // required, The password of the user. It should be at least 8 characters long and max 128 by default.
-            role: "user"
-        });
 
-        if (error) {
+        const response = await RegisterUser(name, email, password)
+
+        if (!response.success) {
             toast.add({
-                title: error.message,
+                title: "Erreur lors de la création du compte utilisateur",
                 type: "error"
             })
             return;
         }
 
         toast.add({
-            title: `Bienvenue, ${response.user.name}`,
+            title: `Bienvenue, ${response.data.name}`,
             type: "success"
         })
 
-        if (response.user.role === "admin") {
-            router.push("/admin");
-        } else {
-            router.push("/")
-        }
+        router.push("/")
 
     }
 

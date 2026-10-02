@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
+import { LoginUser } from "@/app/actions/auth";
 
 
 const formSchema = z.object({
@@ -38,25 +39,25 @@ export default function LoginForm() {
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
 
-        const { data: response, error } = await authClient.signIn.email({
-            email: data.email,
-            password: data.password,
-        })
+        const {email, password} = data
 
-        if (error) {
+
+        const response = await LoginUser(email,password)
+
+        if (!response.success) {
             toast.add({
-                title: error.message,
+                title: "Erreur lors de la connexion de l'utilisateur",
                 type: "error"
             })
             return;
         }
 
         toast.add({
-            title: `Bienvenue, ${response.user.name}`,
+            title: `Bienvenue, ${response.data.name}`,
             type: "success"
         })
         
-        if (response?.user.role === "admin") {
+        if (response?.data.role === "admin") {
             router.push("/admin")
         } else {
             router.push("/")

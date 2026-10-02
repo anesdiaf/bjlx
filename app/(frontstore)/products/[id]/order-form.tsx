@@ -43,7 +43,7 @@ export default function OrderForm({ attributes, currentProduct, currentVariant, 
     return (
         <div className="space-y-4">
             <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4">
-                {Object.keys(currentValues).map((attr) => {
+                {currentValues && Object.keys(currentValues).map((attr) => {
                     const attrID: number = Number(attr)
                     const currentAttribute = attributes.find(at => at.id == attrID)!;
                     return (

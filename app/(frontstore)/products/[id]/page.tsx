@@ -16,6 +16,8 @@ import { db } from "@/src";
 import { userDataType, userInfo } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ReactNode } from "react";
 
 
 
@@ -112,10 +114,84 @@ export default async function SingleProductPage({
         })
     }
 
+    type AccordionItem = {
+        value: string;
+        trigger: string;
+        content: ReactNode;
+    };
+
+    const accordionItems: AccordionItem[] = [
+        {
+            value: "livraison",
+            trigger: "Livraison",
+            content: (
+                <div className="space-y-3">
+                    <p>Livraison à travers les 69 wilayas d'Algérie.</p>
+
+                    <ul className="list-disc space-y-1 pl-5">
+                        <li>Livraison rapide et fiable</li>
+                        <li>Paiement à la livraison</li>
+                        <li>Frais de livraison calculés selon votre wilaya</li>
+                    </ul>
+                </div>
+            ),
+        },
+        {
+            value: "paiement",
+            trigger: "Paiement",
+            content: (
+                <p>
+                    Payez votre commande directement à la réception.
+                    Aucun paiement en ligne n'est nécessaire.
+                </p>
+            ),
+        },
+        {
+            value: "retour",
+            trigger: "Retours & échanges",
+            content: (
+                <div className="space-y-3">
+                    <p>
+                        Les retours sont acceptés uniquement en cas de défaut
+                        du produit.
+                    </p>
+
+                    <p>
+                        Toute demande de retour doit être effectuée dans les
+                        36 heures suivant la réception de la commande.
+                    </p>
+
+                    <p>
+                        Le produit doit être retourné avec son emballage et sa
+                        couverture d'origine en bon état.
+                    </p>
+                </div>
+            ),
+        },
+        {
+            value: "entretien",
+            trigger: "Entretien",
+            content: (
+                <div className="space-y-3">
+                    <p>Pour préserver l'éclat de votre bijou :</p>
+
+                    <ul className="list-disc space-y-1 pl-5">
+                        <li>Évitez le contact prolongé avec l'eau.</li>
+                        <li>Évitez les parfums et produits chimiques.</li>
+                        <li>Rangez votre bijou dans son écrin après utilisation.</li>
+                        <li>
+                            Nettoyez délicatement avec un chiffon doux.
+                        </li>
+                    </ul>
+                </div>
+            ),
+        },
+    ];
+
 
     return (
         <div className="space-y-6">
-            <div className="gap-6 flex flex-col md:flex-row md:items-end">
+            <div className="gap-6 flex flex-col md:flex-row md:items-stretch">
                 <div className="w-full md:w-110 2xl:w-1/2 flex flex-col gap-5">
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -147,27 +223,36 @@ export default async function SingleProductPage({
                     </Carousel>
                 </div>
 
-                <div className="space-y-8 lg:space-y-12  flex-1">
-                    <div className="space-y-12 lg:space-y-8">
+                <div className="space-y-8 flex-1 flex flex-col justify-between">
+                    <div className="space-y-6">
                         <div>
                             <p className="font-serif text-muted-foreground">BJLX</p>
-                            <h1 className="text-2xl md:text-3xl">{currentProduct.title}</h1>
+                            <h1 className="text-xl md:text-2xl">{currentProduct.title}</h1>
                         </div>
-
-                        <div className="flex justify-between items-center">
+                        <div className="flex items-center">
                             {currentVariant.on_promo ?
-                                <div className="flex-1 flex items-end justify-center gap-3 text-xl md:text-2xl text-center">
-                                    <p className="font-medium ">{formatNumbers(currentVariant.promo_price!, "DZ-dz")} D.A</p>
+                                <div className=" flex items-end justify-center gap-3 text-xl text-center pr-6">
+                                    <p className="font-medium">{formatNumbers(currentVariant.promo_price!, "DZ-dz")} D.A</p>
                                     <p className="text-muted-foreground text-sm line-through">{formatNumbers(currentVariant.price, "DZ-dz")} D.A</p>
                                 </div>
                                 :
-                                <p className="flex-1 font-medium text-xl md:text-2xl text-center">{formatNumbers(currentVariant.price, "DZ-dz")} D.A</p>
+                                <p className="font-medium text-xl md:text-2xl text-center pr-6">{formatNumbers(currentVariant.price, "DZ-dz")} D.A</p>
                             }
 
                             <Separator orientation="vertical" />
                             <p className="text-muted-foreground px-6 text-center">Réf.: {currentVariant.sku}</p>
                         </div>
                     </div>
+                    <Accordion className="border-dashed border">
+                        {accordionItems.map(item => (
+                            <AccordionItem key={item.value} value={item.value} className="border-b px-4 last:border-b-0">
+                                <AccordionTrigger>{item.trigger}</AccordionTrigger>
+                                <AccordionContent>
+                                    {item.content}
+                                </AccordionContent>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
                     {currentVariant.track_stock ?
                         currentVariant.stock! > 0 ?
                             <div className="flex items-center gap-2 text-xs text-green-600">

@@ -46,9 +46,6 @@ export async function generateMetadata(
 }
 
 
-
-
-
 export default async function SingleProductPage({
     params,
     searchParams
@@ -65,7 +62,9 @@ export default async function SingleProductPage({
     }
     // Product Variants
     const variants = currentProduct.variants;
-
+    variants.forEach(v => {
+        console.log(v.values);
+    })
     const currentVariant = variant ? variants.find(v => v.id === Number(variant)) : variants.find(v => v.default);
 
 
@@ -78,17 +77,23 @@ export default async function SingleProductPage({
     const { data: attributes } = await getAttributes();
 
     let currentValues: productValues = {};
+    let structuredValues: { [key: number]: number[] } = {};
 
     if (variants.length > 1) {
         variants.map(v => {
             if (v.values && v.values.length !== 0) {
                 const values = v.values[0].values;
+
                 if (values && Object.keys(values).length !== 0) {
                     Object.keys(values).forEach(key => {
                         if (!currentValues[Number(key)]) {
                             currentValues[Number(key)] = []
                         }
-                        currentValues[Number(key)].push(values[Number(key)])
+
+                        if (!currentValues[Number(key)].includes(values[Number(key)])) {
+                            currentValues[Number(key)].push(values[Number(key)])
+                        }
+
                     })
                 }
             }

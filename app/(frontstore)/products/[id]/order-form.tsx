@@ -40,6 +40,31 @@ export default function OrderForm({ attributes, currentProduct, currentVariant, 
     }, [variant_id])
 
 
+const isValueAvailable = (
+    attrId: number,
+    valueId: number
+) => {
+    // Attributes before the current attribute
+    const previousSelections = Object.entries(values)
+        .filter(([key]) => Number(key) < attrId);
+
+    return currentProduct.variants.some((variant) => {
+        const variantValues = variant.values?.[0]?.values;
+
+        if (!variantValues) return false;
+
+        // Current option must exist in this variant
+        if (variantValues[attrId] !== valueId) {
+            return false;
+        }
+
+        // All previous attributes must match
+        return previousSelections.every(
+            ([key, selectedValue]) =>
+                variantValues[Number(key)] === selectedValue
+        );
+    });
+};
 
     return (
         <div className="space-y-4">
@@ -58,8 +83,11 @@ export default function OrderForm({ attributes, currentProduct, currentVariant, 
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        {currentValues[attrID].map(v => (
-                                            <SelectItem key={v} value={v} disabled={!currentAttribute.values.find(v => v.id === values[currentAttribute.id])}>
+                                        {currentValues[attrID].map((v, index) => (
+                                            <SelectItem 
+                                            key={index} 
+                                            value={v} 
+                                            disabled={!isValueAvailable(attrID, v)}>
                                                 {currentAttribute.values.find(value => value.id === v)?.value}
                                             </SelectItem>
                                         ))}

@@ -72,7 +72,10 @@ export const getProductVariant = async (product_id: number, values: VariantValue
     let id: number;
     try {
 
-        const variant = await db.select().from(productVariantValues).where(sql`${JSON.stringify(values)}::jsonb @> ${productVariantValues.values}`)
+        const variant = await db.select().from(productVariantValues).where(and(
+            eq(productVariantValues.product_id, product_id),
+            sql`${JSON.stringify(values)}::jsonb @> ${productVariantValues.values}`
+        ))
 
         console.log("variant", variant);
 

@@ -16,7 +16,7 @@ Important:
     1.2. Should add a type to order status to check with it, types are (preparation, delivered, return, refund) ✅ (There's no need since i can list order statuses then search with them)
 2. ✅ Should a constraint in the variant forms (add & edit) to check if promo is true price should be defined
 
-
+3. Should add sort order to attributes so the user can change the attributes values on product page in that order (choose color, if there's a match on the next attribute make it selecatable onward)
 
 ✅ design cart page then ✅checkout then move to ✅order creation then ⏳editing orders and ✅handling history and ⏳returns
 

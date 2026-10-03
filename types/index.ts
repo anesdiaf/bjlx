@@ -1,4 +1,3 @@
-import { variantImageType } from "@/src/db/schema";
 import z from "zod";
 
 
